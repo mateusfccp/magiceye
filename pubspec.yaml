@@ -1,0 +1,26 @@
+name: magiceye
+description: An abstraction on top of flutter camera.
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.6.0 <3.0.0"
+
+dependencies:
+  camera: ^0.5.7
+  dartz: ^0.8.9
+  flutter:
+    sdk: flutter
+  path_provider: ^1.5.1
+  native_device_orientation: ^0.3.0
+  rxdart: ^0.23.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    androidPackage: me.mateusfccp.magiceye
+    pluginClass: MagicEyePlugin
