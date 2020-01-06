@@ -1,3 +1,7 @@
+## 0.0.7
+
+* Lowered required path_provider version to 1.5.0 so it's backward compatible with Flutter 1.9
+
 ## 0.0.6
 
 * Lowered required rxdart version to ^0.22.5
