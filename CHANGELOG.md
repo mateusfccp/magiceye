@@ -1,3 +1,7 @@
+## 0.0.5
+
+* Lowered required Dart SDK to 2.5
+
 ## 0.0.4
 
 * Exported DeviceCamera
