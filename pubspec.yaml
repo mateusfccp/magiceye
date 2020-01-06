@@ -1,6 +1,6 @@
 name: magiceye
 description: An abstraction on top of flutter camera.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/mateusfccp/magiceye
 repository: https://github.com/mateusfccp/magiceye
 

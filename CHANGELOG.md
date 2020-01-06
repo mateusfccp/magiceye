@@ -1,3 +1,7 @@
+## 0.0.3
+
+* Unexported default_camera_control_layer
+
 ## 0.0.2
 
 * Instead of [pushWithConfirmation] (not yet implemented), the confirmation screen has been implemented on the [defaultCameraControlLayer] method.
