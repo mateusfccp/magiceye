@@ -1,3 +1,7 @@
+## 0.0.6
+
+* Lowered required rxdart version to ^0.22.5
+
 ## 0.0.5
 
 * Lowered required Dart SDK to 2.5
