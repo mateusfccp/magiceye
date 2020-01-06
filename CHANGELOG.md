@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Exported DeviceCamera
+
 ## 0.0.3
 
 * Unexported default_camera_control_layer
