@@ -1,4 +1,4 @@
-import 'package:magiceye/enums/device_camera.dart';
+import '../enums/device_camera.dart';
 
 /// Error thrown when an attempt to select a unallowed camera is made.
 class UnallowedCameraError extends Error {

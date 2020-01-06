@@ -1,5 +1,6 @@
-import 'package:magiceye/enums/device_direction.dart';
 import 'package:flutter/foundation.dart';
+
+import '../enums/device_direction.dart';
 
 /// The context provided to MagicEye preview layers.
 /// 

@@ -1,3 +1,9 @@
+## 0.0.2
+
+* Instead of [pushWithConfirmation] (not yet implemented), the confirmation screen has been implemented on the [defaultCameraControlLayer] method.
+* Change on package structure
+* Little change on API: instead of returning a String, now the MagicEye return an [Option<String>]. Futurely, it will return a [Either<MagicEyeException, String>]
+
 ## 0.0.1
 
 * Initial release: basic functionality

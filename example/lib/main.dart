@@ -48,15 +48,15 @@ class LoucoButton extends StatelessWidget {
           ],
         ),
         onPressed: () => MagicEye(
-          allowedDirections: const {DeviceDirection.landscape},
           previewLayer: _t,
         ).push(context).then(
-          (path) {
-            file.add(
-              File(path),
-            );
-          },
-        ),
+              (path) => path.fold(
+                () => null,
+                (path) => file.add(
+                  File(path),
+                ),
+              ),
+            ),
       ),
     );
   }

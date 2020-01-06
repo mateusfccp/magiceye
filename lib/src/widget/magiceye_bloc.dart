@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:magiceye/enums/device_camera.dart';
-import 'package:magiceye/errors/unallowed_direction_error.dart';
-import 'package:magiceye/exceptions/magiceye_exception.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../enums/device_camera.dart';
+import '../errors/unallowed_direction_error.dart';
+import '../exceptions/magiceye_exception.dart';
 
 class MagicEyeBloc {
   final BehaviorSubject<Option<CameraController>> controller =

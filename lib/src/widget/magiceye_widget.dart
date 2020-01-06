@@ -1,15 +1,15 @@
 import 'package:camera/camera.dart';
-import 'package:magiceye/contexts/control_layer_context.dart';
-import 'package:magiceye/contexts/preview_layer_context.dart';
-import 'package:magiceye/enums/device_camera.dart';
-import 'package:magiceye/enums/device_direction.dart';
-import 'package:magiceye/layers/default_camera_preview_layer.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../contexts/control_layer_context.dart';
+import '../contexts/preview_layer_context.dart';
+import '../enums/device_camera.dart';
+import '../enums/device_direction.dart';
 import '../layers/default_camera_control_layer.dart';
+import '../layers/default_camera_preview_layer.dart';
 import 'magiceye_bloc.dart';
 
 /// A component that provides access to the devices camera and abstracts it's functions.
@@ -22,8 +22,6 @@ import 'magiceye_bloc.dart';
 /// MagicEye.push(context).then((path) => print("Photo saved to $path"));
 /// ```
 ///
-/// If you want a confirmation screen before the path is returned, you may use [pushWithConfirmation] instead.
-/// 
 /// MagicEye can also be pushed manually with [Navigator.push]. If you do this way, don't forget to [dispose] the
 /// component.
 ///
@@ -43,7 +41,7 @@ import 'magiceye_bloc.dart';
 /// The Preview Layer is, usually, used for graphical-only widgets, although it accepts any [Widget]. The canvas is
 /// limited to the preview area, so if the preview aspect ratio is different from the device's aspect ratio, the
 /// canvas will not include the black area.
-/// 
+///
 /// MagicEye provide some default preview layers through [PackageLayer]. An example is [PreviewLayer.grid], which
 /// shows a grid on the preview to help with the Rule of Thirds.
 ///
@@ -158,14 +156,12 @@ class MagicEye extends StatelessWidget {
 
   void dispose() => _cameramBloc.dispose();
 
-  Future<String> push(BuildContext context) => Navigator.of(context)
-          .push(
+  Future<Option<String>> push(BuildContext context) => Navigator.of(context)
+      .push<Option<String>>(
         MaterialPageRoute(
           builder: this.build,
         ),
       )
-          .then((path) {
-        this.dispose();
-        return path;
-      });
+      .then<Option<String>>(id)
+      .whenComplete(this.dispose);
 }

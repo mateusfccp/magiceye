@@ -1,10 +1,11 @@
-import 'package:magiceye/enums/device_camera.dart';
-import 'package:magiceye/enums/device_direction.dart';
-import 'package:magiceye/errors/unallowed_direction_error.dart';
-import 'package:magiceye/exceptions/magiceye_exception.dart';
-import 'package:magiceye/widget/magiceye_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
+
+import '../enums/device_camera.dart';
+import '../enums/device_direction.dart';
+import '../errors/unallowed_direction_error.dart';
+import '../exceptions/magiceye_exception.dart';
+import '../widget/magiceye_bloc.dart';
 
 /// The context provided to MagicEye control layers.
 /// 
