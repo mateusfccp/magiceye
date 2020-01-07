@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:magiceye/magiceye.dart';
 
-typedef PreviewLayerBuilder = Widget Function(BuildContext context);
+typedef PreviewLayerBuilder = Widget Function(
+    BuildContext, PreviewLayerContext);
 
 /// Predefined preview layers to be used on [MagicEye] constructor.
 ///
@@ -24,7 +26,8 @@ abstract class PreviewLayer {
     final double scale = 0.5,
     final Color color = Colors.black38,
   }) =>
-      (final BuildContext context) => ClipPath(
+      (final BuildContext context, PreviewLayerContext layerContext) =>
+          ClipPath(
             clipper: _RectClipper(
               rectBuilder: (size) => Rect.fromCenter(
                 center: Offset(size.width / 2, size.height / 2),
@@ -46,7 +49,8 @@ abstract class PreviewLayer {
     final double scale = 0.5,
     final Color color = Colors.black38,
   }) =>
-      (final BuildContext context) => ClipPath(
+      (final BuildContext context, PreviewLayerContext layerContext) =>
+          ClipPath(
             clipper: _RectClipper(
               rectBuilder: _squareRectBuilder(scale),
             ),
@@ -63,7 +67,8 @@ abstract class PreviewLayer {
     final double scale = 0.5,
     final Color color = Colors.black38,
   }) =>
-      (final BuildContext context) => ClipPath(
+      (final BuildContext context, PreviewLayerContext layerContext) =>
+          ClipPath(
             clipper: _RoundRectClipper(
               rectBuilder: _squareRectBuilder(scale),
             ),
@@ -79,7 +84,7 @@ abstract class PreviewLayer {
     final Image image, {
     final double scale = 1,
   }) =>
-      (final BuildContext context) => Center(
+      (final BuildContext context, PreviewLayerContext layerContext) => Center(
             child: Transform.scale(
               scale: scale,
               child: image,
@@ -90,7 +95,8 @@ abstract class PreviewLayer {
   static PreviewLayerBuilder grid({
     Color color = Colors.white30,
   }) =>
-      (final BuildContext context) => CustomPaint(
+      (final BuildContext context, PreviewLayerContext layerContext) =>
+          CustomPaint(
             painter: _GridPainter(color: color),
             child: Container(),
           );

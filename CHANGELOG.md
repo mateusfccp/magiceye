@@ -1,3 +1,7 @@
+## 0.0.10
+
+* Fixed PreviewLayer functions
+
 ## 0.0.9+1
 
 * Some corrections on formatting
