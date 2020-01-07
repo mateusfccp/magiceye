@@ -1,6 +1,12 @@
+## 0.0.9
+
+* This breaks the API.
+* Instead of returning an [Option<String>], the [.push] method now returns a [Either<MagicEyeException, String>], in concordance with [takePicture] method. This change provides an efficient way to handle camera exceptions.
+* Improvements on documentation
+
 ## 0.0.8
 
-* Make functions [toRadian] and [toDegrees] for [DeviceDirection] into extension methods ([.radian] and [.degrees] respectivelly).
+* Make functions [toRadian] and [toDegrees] for [DeviceDirection] into extension methods ([.radian] and [.degrees] respectively).
 * For this, raised Dart SDK requirement to 2.7.
 * Also, reraised required path_provider version to 1.5.1
 

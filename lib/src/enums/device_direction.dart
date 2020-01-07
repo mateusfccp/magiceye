@@ -11,7 +11,8 @@ enum DeviceDirection {
   unknown
 }
 
-extension DeviceDirectionAngle on DeviceDirection {
+/// Extends the DeviceDirection enum with getters that represent the direction's angle.
+extension DeviceDirectionAngleExtension on DeviceDirection {
   double _toDegrees(DeviceDirection direction) {
     switch (direction) {
       case DeviceDirection.portrait:
@@ -32,6 +33,9 @@ extension DeviceDirectionAngle on DeviceDirection {
     }
   }
   
+  /// The direction angle in degrees.
   double get degrees => _toDegrees(this);
+
+  /// The direction angle in radians.
   double get radians => this.degrees * pi / 180;
 }

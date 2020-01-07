@@ -51,7 +51,7 @@ class LoucoButton extends StatelessWidget {
           previewLayer: _t,
         ).push(context).then(
               (path) => path.fold(
-                () => null,
+                (_) => null,
                 (path) => file.add(
                   File(path),
                 ),

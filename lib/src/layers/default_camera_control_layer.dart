@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:magiceye/src/exceptions/magiceye_exception.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../contexts/control_layer_context.dart';
@@ -23,7 +24,7 @@ Widget defaultCameraControlLayer(
           children: <Widget>[
             CircleButton(
               icon: Icons.arrow_back_ios,
-              onPressed: () => Navigator.of(context).pop(None()),
+              onPressed: () => Navigator.of(context).pop,
               orientationStream: layerContext.direction,
             ),
             StreamBuilder<DeviceDirection>(
@@ -38,9 +39,14 @@ Widget defaultCameraControlLayer(
                   firstCurve: Curves.easeOutQuint,
                   firstChild: CircleButton(
                     icon: Icons.camera_alt,
-                    onPressed: () => layerContext.takePicture().then((p) {
-                      pathStream.add(p.toOption());
-                    }),
+                    onPressed: () => layerContext.takePicture().then(
+                          (pathOr) => pathOr.fold(
+                            (error) => Navigator.of(context)
+                                .pop<Either<MagicEyeException, String>>(
+                                    Left(error)),
+                            (path) => pathStream.add(Some(path)),
+                          ),
+                        ),
                     orientationStream: layerContext.direction,
                   ),
                   secondCurve: Curves.easeOutQuint,
@@ -82,7 +88,8 @@ Widget defaultCameraControlLayer(
               icon: Icons.check,
               onPressed: () {
                 pathStream.close();
-                Navigator.of(context).pop(Some(path));
+                Navigator.of(context)
+                    .pop<Either<MagicEyeException, String>>(Right(path));
               },
             )
           ],

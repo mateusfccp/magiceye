@@ -8,6 +8,7 @@ import '../contexts/control_layer_context.dart';
 import '../contexts/preview_layer_context.dart';
 import '../enums/device_camera.dart';
 import '../enums/device_direction.dart';
+import '../exceptions/magiceye_exception.dart';
 import '../layers/default_camera_control_layer.dart';
 import '../layers/default_camera_preview_layer.dart';
 import 'magiceye_bloc.dart';
@@ -156,12 +157,19 @@ class MagicEye extends StatelessWidget {
 
   void dispose() => _cameramBloc.dispose();
 
-  Future<Option<String>> push(BuildContext context) => Navigator.of(context)
-      .push<Option<String>>(
+  /// Pushes the MagicEye to the screen.
+  /// 
+  /// This is the recommended way to push MagicEye to the screen, as it is simpler and
+  /// deals with the widget's disposal.
+  /// 
+  /// It will return [Either] a [Left<MagicEyeException>], which can be handled or thrown by the client,
+  /// or a [Right<String>] containing the path to the screenshot taken.
+  Future<Either<MagicEyeException, String>> push(BuildContext context) => Navigator.of(context)
+      .push<Either<MagicEyeException, String>>(
         MaterialPageRoute(
           builder: this.build,
         ),
       )
-      .then<Option<String>>(id)
+      .then<Either<MagicEyeException, String>>(id)
       .whenComplete(this.dispose);
 }
