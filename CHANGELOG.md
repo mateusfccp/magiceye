@@ -1,3 +1,9 @@
+## 0.0.8
+
+* Make functions [toRadian] and [toDegrees] for [DeviceDirection] into extension methods ([.radian] and [.degrees] respectivelly).
+* For this, raised Dart SDK requirement to 2.7.
+* Also, reraised required path_provider version to 1.5.1
+
 ## 0.0.7
 
 * Lowered required path_provider version to 1.5.0 so it's backward compatible with Flutter 1.9

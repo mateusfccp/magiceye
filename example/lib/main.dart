@@ -71,7 +71,7 @@ Widget _t(BuildContext context, PreviewLayerContext layerContext) {
     builder: (context, snapshot) {
       final bool enabled =
           layerContext.allowedDirections.contains(snapshot.data);
-      orientations = [orientations[0], toDegrees(snapshot.data)];
+      orientations = [orientations[0], snapshot.data.degrees.toInt()];
 
       final Color red = const Color(0xB4EC3838);
 
