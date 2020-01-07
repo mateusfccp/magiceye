@@ -21,7 +21,7 @@ class MagicEyeBloc {
   };
 
   /// The resolution that will be used on the camera.
-  /// 
+  ///
   /// Defaults to the maximum resolution.
   final ResolutionPreset resolutionPreset;
 

@@ -158,18 +158,19 @@ class MagicEye extends StatelessWidget {
   void dispose() => _cameramBloc.dispose();
 
   /// Pushes the MagicEye to the screen.
-  /// 
+  ///
   /// This is the recommended way to push MagicEye to the screen, as it is simpler and
   /// deals with the widget's disposal.
-  /// 
+  ///
   /// It will return [Either] a [Left<MagicEyeException>], which can be handled or thrown by the client,
   /// or a [Right<String>] containing the path to the screenshot taken.
-  Future<Either<MagicEyeException, String>> push(BuildContext context) => Navigator.of(context)
-      .push<Either<MagicEyeException, String>>(
-        MaterialPageRoute(
-          builder: this.build,
-        ),
-      )
-      .then<Either<MagicEyeException, String>>(id)
-      .whenComplete(this.dispose);
+  Future<Either<MagicEyeException, String>> push(BuildContext context) =>
+      Navigator.of(context)
+          .push<Either<MagicEyeException, String>>(
+            MaterialPageRoute(
+              builder: this.build,
+            ),
+          )
+          .then<Either<MagicEyeException, String>>(id)
+          .whenComplete(this.dispose);
 }

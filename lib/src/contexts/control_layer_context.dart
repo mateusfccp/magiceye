@@ -8,7 +8,7 @@ import '../exceptions/magiceye_exception.dart';
 import '../widget/magiceye_bloc.dart';
 
 /// The context provided to MagicEye control layers.
-/// 
+///
 /// The context allows the layer to get the provided parameters on MagicEye creation,
 /// as well as the methods necessary to take photos and handle MagicEye.
 class ControlLayerContext {

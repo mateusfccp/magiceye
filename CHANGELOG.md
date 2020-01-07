@@ -1,3 +1,9 @@
+## 0.0.9+1
+
+* Some corrections on formatting
+* Updated description
+* Updated rxdart dependency
+
 ## 0.0.9
 
 * This breaks the API.

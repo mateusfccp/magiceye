@@ -1,7 +1,7 @@
 import 'dart:math';
 
 /// The device direction.
-/// 
+///
 /// [landscape] is the left landscape.
 enum DeviceDirection {
   portrait,
@@ -32,7 +32,7 @@ extension DeviceDirectionAngleExtension on DeviceDirection {
         break;
     }
   }
-  
+
   /// The direction angle in degrees.
   double get degrees => _toDegrees(this);
 
