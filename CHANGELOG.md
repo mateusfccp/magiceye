@@ -1,3 +1,7 @@
+## 0.0.12
+
+* Fixed error handling
+
 ## 0.0.11
 
 * Provide direction as a BehaviorSubject instead of a Stream on contexts
