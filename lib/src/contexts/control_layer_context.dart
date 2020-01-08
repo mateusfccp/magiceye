@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../enums/device_camera.dart';
 import '../enums/device_direction.dart';
@@ -19,7 +20,7 @@ class ControlLayerContext {
   final Set<DeviceCamera> allowedCameras;
 
   /// A stream that emits every change on device's direction.
-  final Stream<DeviceDirection> direction;
+  final BehaviorSubject<DeviceDirection> direction;
 
   /// Selects the first camera that matches the given [cameraLensDirection] and optionally returns an error.
   ///

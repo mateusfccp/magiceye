@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../enums/device_direction.dart';
 
@@ -11,7 +12,7 @@ class PreviewLayerContext {
   final Set<DeviceDirection> allowedDirections;
 
   /// A stream that emits every change on device's direction.
-  final Stream<DeviceDirection> direction;
+  final BehaviorSubject<DeviceDirection> direction;
 
   const PreviewLayerContext({
     @required this.allowedDirections,

@@ -84,13 +84,12 @@ class MagicEye extends StatelessWidget {
   final Set<DeviceDirection> allowedDirections;
 
   final MagicEyeBloc _cameramBloc;
-  final PublishSubject<DeviceDirection> _orientation = PublishSubject();
+  final BehaviorSubject<DeviceDirection> _orientation = BehaviorSubject();
 
   /// Creates a MagicEye component.
   MagicEye({
     Key key,
     this.loadingWidget = const CircularProgressIndicator(),
-    this.controlLayer = defaultCameraControlLayer,
     this.previewLayer = defaultCameraPreviewLayer,
     this.resolutionPreset = ResolutionPreset.max,
     this.defaultDirection = DeviceCamera.back,
@@ -99,16 +98,17 @@ class MagicEye extends StatelessWidget {
       DeviceCamera.front,
     },
     this.allowedDirections = const {DeviceDirection.portrait},
-  }) : this._cameramBloc = MagicEyeBloc(
+  })  : this._cameramBloc = MagicEyeBloc(
           resolutionPreset: resolutionPreset,
           defaultDirection: defaultDirection,
           allowedCameras: allowedCameras,
-        );
+        ),
+        this.controlLayer = defaultCameraControlLayer();
 
   @override
   Widget build(BuildContext context) => StreamBuilder<Option<CameraController>>(
         stream: _cameramBloc.controller,
-        initialData: None(),
+        initialData: _cameramBloc.controller.value,
         builder: (context, snapshot) => snapshot.data
             .bind<CameraController>((controller) =>
                 controller.value.isInitialized ? Some(controller) : None())
