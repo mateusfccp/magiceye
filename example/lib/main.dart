@@ -40,7 +40,7 @@ class LoucoButton extends StatelessWidget {
               child: Text("Take Picture"),
               onPressed: () => MagicEye().push(context).then(
                     (path) => path?.fold(
-                      (_) => null,
+                      (e) => print("Error :: ${e.message}"),
                       (path) => file.add(
                         File(path),
                       ),

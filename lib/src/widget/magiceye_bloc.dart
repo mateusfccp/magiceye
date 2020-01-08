@@ -89,16 +89,19 @@ class MagicEyeBloc {
         (directory) async {
           final String path =
               "${directory.path}/${DateTime.now().microsecondsSinceEpoch}.jpg";
-          await controller.takePicture(path);
+
+          try {
+            await controller.takePicture(path);
+          } on CameraException catch (error) {
+            return Left(
+              MagicEyeException(
+                message: error.description,
+                source: error,
+              ),
+            );
+          }
           return Right(path);
         },
-      ).catchError(
-        (Object error) => Left(
-          MagicEyeException(
-            message: error is CameraException ? error.description : error,
-            source: error,
-          ),
-        ),
       ),
     );
   }
