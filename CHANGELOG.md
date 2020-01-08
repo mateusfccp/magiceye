@@ -1,3 +1,9 @@
+## 0.0.11
+
+* Provide direction as a BehaviorSubject instead of a Stream on contexts
+* Improvements on defaultCameraControl
+* Example cleanups
+
 ## 0.0.10
 
 * Fixed PreviewLayer functions
