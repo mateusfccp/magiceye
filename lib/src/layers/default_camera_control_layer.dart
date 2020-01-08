@@ -25,7 +25,7 @@ Widget Function(BuildContext, ControlLayerContext) defaultCameraControlLayer() {
             children: <Widget>[
               CircleButton(
                 icon: Icons.arrow_back_ios,
-                onPressed: () => Navigator.of(context).pop,
+                onPressed: Navigator.of(context).pop,
                 orientationStream: layerContext.direction,
               ),
               StreamBuilder<DeviceDirection>(
