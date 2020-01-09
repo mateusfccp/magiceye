@@ -157,8 +157,8 @@ class MagicEyeBloc {
     controller.initialize().then((_) => this.controller.add(Some(controller)));
   }
 
+  /// Releases the resources of the BLoC.
   void dispose() {
-    // Dispose controller
     this.controller.value.forEach((controller) => controller.dispose());
     controller.close();
   }

@@ -151,6 +151,7 @@ class MagicEye extends StatelessWidget {
         ),
       );
 
+  /// Releases the widget's resources.
   void dispose() => _cameramBloc.dispose();
 
   /// Pushes the MagicEye to the screen.
