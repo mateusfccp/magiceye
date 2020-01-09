@@ -37,75 +37,55 @@ class _WithException extends _CameraState {
 Widget Function(BuildContext, ControlLayerContext) defaultCameraControlLayer() {
   BehaviorSubject<_CameraState> cameraState = BehaviorSubject.seeded(_Idle());
 
-  return (context, layerContext) {
-    return _DefaultCameraControlLayer(
-      cameraState: cameraState,
-      layerContext: layerContext,
-    );
-  };
-}
+  return (context, layerContext) => Material(
+        type: MaterialType.transparency,
+        child: Container(
+          width: double.infinity,
+          child: StreamBuilder<_CameraState>(
+            initialData: cameraState.value,
+            stream: cameraState,
+            builder: (context, snapshot) {
+              if (snapshot.data is _WithException) {
+                cameraState.add(const _Idle());
+                SchedulerBinding.instance.addPostFrameCallback(
+                  (_) {
+                    Navigator.of(context)
+                        .pop<Either<MagicEyeException, String>>(
+                      Left((snapshot.data as _WithException).exception),
+                    );
+                  },
+                );
+                cameraState.close();
+              }
 
-class _DefaultCameraControlLayer extends StatelessWidget {
-  final BehaviorSubject<_CameraState> cameraState;
-  final ControlLayerContext layerContext;
-
-  _DefaultCameraControlLayer({
-    Key key,
-    this.cameraState,
-    this.layerContext,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      type: MaterialType.transparency,
-      child: Container(
-        width: double.infinity,
-        child: StreamBuilder<_CameraState>(
-          initialData: cameraState.value,
-          stream: cameraState,
-          builder: (context, snapshot) {
-            if (snapshot.data is _WithException) {
-              cameraState.add(const _Idle());
-              SchedulerBinding.instance.addPostFrameCallback(
-                (_) {
-                  Navigator.of(context).pop<Either<MagicEyeException, String>>(
-                    Left((snapshot.data as _WithException).exception),
-                  );
-                },
+              return Stack(
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  if (snapshot.data is _TakingPicture ||
+                      snapshot.data is _WithPicture)
+                    Container(color: Colors.black),
+                  if (snapshot.data is _WithPicture)
+                    Image.file(
+                      File((snapshot.data as _WithPicture).path),
+                    ),
+                  if (snapshot.data is _WithPicture)
+                    _BottomConfirmationButtons(
+                      path: (snapshot.data as _WithPicture).path,
+                      pathStream: cameraState,
+                    ),
+                  if (snapshot.data is _TakingPicture)
+                    Center(child: CircularProgressIndicator()),
+                  if (snapshot.data is _Idle)
+                    _BottomPictureButtons(
+                      layerContext: layerContext,
+                      cameraState: cameraState,
+                    ),
+                ],
               );
-              cameraState.close();
-            }
-
-            return Stack(
-              alignment: Alignment.bottomCenter,
-              children: <Widget>[
-                if (snapshot.data is _TakingPicture ||
-                    snapshot.data is _WithPicture)
-                  Container(color: Colors.black),
-                if (snapshot.data is _WithPicture)
-                  Image.file(
-                    File((snapshot.data as _WithPicture).path),
-                  ),
-                if (snapshot.data is _WithPicture)
-                  _BottomConfirmationButtons(
-                    path: (snapshot.data as _WithPicture).path,
-                    pathStream: cameraState,
-                  ),
-                if (snapshot.data is _TakingPicture)
-                  Center(child: CircularProgressIndicator()),
-                if (snapshot.data is _Idle)
-                  _BottomPictureButtons(
-                    layerContext: layerContext,
-                    cameraState: cameraState,
-                  ),
-              ],
-            );
-          },
+            },
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 class _BottomPictureButtons extends StatelessWidget {

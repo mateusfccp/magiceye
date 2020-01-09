@@ -1,3 +1,7 @@
+## 0.0.13+1
+
+* Deal with all warnings
+
 ## 0.0.13
 
 * Dealing with controllers' resources release (issue present since 0.0.1)
