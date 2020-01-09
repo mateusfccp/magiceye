@@ -65,8 +65,12 @@ Widget Function(BuildContext, ControlLayerContext) defaultCameraControlLayer() {
                       snapshot.data is _WithPicture)
                     Container(color: Colors.black),
                   if (snapshot.data is _WithPicture)
-                    Image.file(
-                      File((snapshot.data as _WithPicture).path),
+                    Center(
+                      child: Image.file(
+                        File(
+                          (snapshot.data as _WithPicture).path,
+                        ),
+                      ),
                     ),
                   if (snapshot.data is _WithPicture)
                     _BottomConfirmationButtons(

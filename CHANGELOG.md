@@ -1,3 +1,7 @@
+## 0.0.13+4
+
+* Center image on default control layer confirmation
+
 ## 0.0.13+3
 
 * Small update on README.md
