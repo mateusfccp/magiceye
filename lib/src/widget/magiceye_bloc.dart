@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -51,6 +52,18 @@ class MagicEyeBloc {
         };
 
         _setCamera(_cameras[defaultDirection]);
+
+        // Deal with the disposal of the controller resources everytime the controller changes
+        controller.pairwise().listen(
+              (controllers) => controllers.first.fold(
+                () {},
+                (controller) {
+                  // Delay the dispose of the controller until the next frame
+                  SchedulerBinding.instance
+                      .addPostFrameCallback((_) => controller.dispose);
+                },
+              ),
+            );
       },
     );
   }
@@ -137,11 +150,6 @@ class MagicEyeBloc {
       );
 
   void _setCamera(final CameraDescription camera) {
-    // TODO: Deal with controller dispose
-    // Dispose current controller after new controller has been pushed
-    // final currentController =
-    //     this.controller.value.forEach((controller) => controller?.dispose());
-
     // Create new controller for [camera]
     final CameraController controller =
         CameraController(camera, this.resolutionPreset);
