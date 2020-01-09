@@ -1,4 +1,4 @@
-![MagicEye](./docs/logo_title.svg)
+![MagicEye](./doc/logo_title.svg)
 
 A abstraction over flutter camera. More info futurely.
 
