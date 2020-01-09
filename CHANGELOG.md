@@ -1,3 +1,7 @@
+## 0.0.13+2
+
+* Small update on README.md
+
 ## 0.0.13+1
 
 * Deal with all warnings
