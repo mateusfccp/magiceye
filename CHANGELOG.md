@@ -1,3 +1,9 @@
+## 0.0.13
+
+* Dealing with controllers' resources release (issue present since 0.0.1)
+* Fixes camera freezing by disconnection (issue present since 0.0.1)
+* Small cleanup and documentation update
+
 ## 0.0.12
 
 * Fixed error handling
