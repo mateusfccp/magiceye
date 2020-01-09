@@ -109,50 +109,46 @@ class MagicEye extends StatelessWidget {
   Widget build(BuildContext context) => StreamBuilder<Option<CameraController>>(
         stream: _cameramBloc.controller,
         initialData: _cameramBloc.controller.value,
-        builder: (context, snapshot) => snapshot.data
-            .bind<CameraController>((controller) =>
-                controller.value.isInitialized ? Some(controller) : None())
-            .fold<Widget>(
-              () => Center(child: loadingWidget),
-              (controller) => NativeDeviceOrientationReader(
-                useSensor: true,
-                builder: (context) {
-                  _orientation.add(DeviceDirection.values[
-                      NativeDeviceOrientationReader.orientation(context)
-                          .index]);
+        builder: (context, snapshot) => snapshot.data.fold<Widget>(
+          () => Center(child: loadingWidget),
+          (controller) => NativeDeviceOrientationReader(
+            useSensor: true,
+            builder: (context) {
+              _orientation.add(DeviceDirection.values[
+                  NativeDeviceOrientationReader.orientation(context).index]);
 
-                  return Stack(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    children: [
-                      AspectRatio(
-                        aspectRatio: controller.value.aspectRatio,
-                        child: Stack(
-                          children: <Widget>[
-                            CameraPreview(controller),
-                            previewLayer(
-                              context,
-                              PreviewLayerContext(
-                                allowedDirections: allowedDirections,
-                                direction: _orientation,
-                              ),
-                            ),
-                          ],
+              return Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: [
+                  AspectRatio(
+                    aspectRatio: controller.value.aspectRatio,
+                    child: Stack(
+                      children: <Widget>[
+                        CameraPreview(controller),
+                        previewLayer(
+                          context,
+                          PreviewLayerContext(
+                            allowedDirections: allowedDirections,
+                            direction: _orientation,
+                          ),
                         ),
-                      ),
-                      controlLayer(
-                        context,
-                        ControlLayerContext(
-                          allowedCameras: allowedCameras,
-                          allowedDirections: allowedDirections,
-                          bloc: _cameramBloc,
-                          direction: _orientation,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
+                      ],
+                    ),
+                  ),
+                  controlLayer(
+                    context,
+                    ControlLayerContext(
+                      allowedCameras: allowedCameras,
+                      allowedDirections: allowedDirections,
+                      bloc: _cameramBloc,
+                      direction: _orientation,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       );
 
   void dispose() => _cameramBloc.dispose();
