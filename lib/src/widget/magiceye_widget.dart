@@ -55,7 +55,7 @@ import 'magiceye_bloc.dart';
 /// The Control Layer is used to render the controls of the camera. Its canvas is the entire device screen.
 /// The parameter [controlLayer] is similar to [previewLayer], but provides a [ControlLayerContext] instead, which
 /// gives you access to the camera functions like [takePicture].
-class MagicEye extends StatelessWidget {
+class MagicEye extends StatelessWidget with WidgetsBindingObserver {
   /// The widget showed when the camera is still not ready.
   final Widget loadingWidget;
 
@@ -83,7 +83,7 @@ class MagicEye extends StatelessWidget {
   /// The camera directions that will be available to the camera.
   final Set<DeviceDirection> allowedDirections;
 
-  final MagicEyeBloc _cameramBloc;
+  final MagicEyeBloc _bloc;
   final BehaviorSubject<DeviceDirection> _orientation = BehaviorSubject();
 
   /// Creates a MagicEye component.
@@ -98,17 +98,19 @@ class MagicEye extends StatelessWidget {
       DeviceCamera.front,
     },
     this.allowedDirections = const {DeviceDirection.portrait},
-  })  : this._cameramBloc = MagicEyeBloc(
+  })  : this._bloc = MagicEyeBloc(
           resolutionPreset: resolutionPreset,
           defaultDirection: defaultDirection,
           allowedCameras: allowedCameras,
         ),
-        this.controlLayer = defaultCameraControlLayer();
+        this.controlLayer = defaultCameraControlLayer() {
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   @override
   Widget build(BuildContext context) => StreamBuilder<Option<CameraController>>(
-        stream: _cameramBloc.controller,
-        initialData: _cameramBloc.controller.value,
+        stream: _bloc.controller,
+        initialData: _bloc.controller.value,
         builder: (context, snapshot) => snapshot.data.fold<Widget>(
           () => Center(child: loadingWidget),
           (controller) => NativeDeviceOrientationReader(
@@ -140,7 +142,7 @@ class MagicEye extends StatelessWidget {
                     ControlLayerContext(
                       allowedCameras: allowedCameras,
                       allowedDirections: allowedDirections,
-                      bloc: _cameramBloc,
+                      bloc: _bloc,
                       direction: _orientation,
                     ),
                   ),
@@ -151,8 +153,17 @@ class MagicEye extends StatelessWidget {
         ),
       );
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _bloc.refreshCamera();
+    super.didChangeAppLifecycleState(state);
+  }
+
   /// Releases the widget's resources.
-  void dispose() => _cameramBloc.dispose();
+  void dispose() {
+    _bloc.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
 
   /// Pushes the MagicEye to the screen.
   ///

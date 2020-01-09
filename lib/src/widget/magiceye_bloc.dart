@@ -162,4 +162,9 @@ class MagicEyeBloc {
     this.controller.value.forEach((controller) => controller.dispose());
     controller.close();
   }
+
+  void refreshCamera() => this.controller.value.fold(
+        () {},
+        (controller) => _setCamera(controller.description),
+      );
 }
