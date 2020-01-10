@@ -1,3 +1,8 @@
+## 0.0.14
+
+* Added a method to returs the difference of directions in degrees.
+* See [DeviceDirecton.difference].
+
 ## 0.0.13+4
 
 * Center image on default control layer confirmation

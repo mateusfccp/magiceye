@@ -25,7 +25,7 @@ extension DeviceDirectionAngleExtension on DeviceDirection {
         return 90;
         break;
       case DeviceDirection.landscapeReversed:
-        return -90;
+        return 270;
         break;
       default:
         return 0;
@@ -38,4 +38,13 @@ extension DeviceDirectionAngleExtension on DeviceDirection {
 
   /// The direction angle in radians.
   double get radians => this.degrees * pi / 180;
+
+  /// The difference, in degrees, between this and [direction].
+  /// 
+  /// When the difference is 180 degrees, the angle returned is positive.
+  double difference(DeviceDirection direction) {
+    double diff = this.degrees - direction.degrees;
+    if (this.degrees - direction.degrees == 270) return -90;
+    else return diff;
+  }
 }
