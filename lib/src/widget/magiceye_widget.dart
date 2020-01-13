@@ -20,7 +20,12 @@ import 'magiceye_bloc.dart';
 ///
 /// MagicEye can be pushed to screen by calling [push].
 /// ```dart
-/// MagicEye.push(context).then((path) => print("Photo saved to $path"));
+/// MagicEye.push(context).then(
+///   (result) => result.fold(
+///     (exception) => // Handle exception case
+///     (path) => // Handle success case. [path] has the path to the file saved
+///   ),
+/// );
 /// ```
 ///
 /// MagicEye can also be pushed manually with [Navigator.push]. If you do this way, don't forget to [dispose] the

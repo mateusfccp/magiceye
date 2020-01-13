@@ -35,7 +35,7 @@ packages:
       name: camera
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.7+2"
+    version: "0.5.7+3"
   charcode:
     dependency: transitive
     description:
@@ -94,7 +94,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.15+4"
+    version: "0.1.0"
   matcher:
     dependency: transitive
     description:

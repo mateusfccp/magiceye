@@ -1,3 +1,9 @@
+## 0.1.0
+
+* API has reached a reasonable stability.
+* README.md has been updated with enough info.
+* Little update on the documentation.
+
 ## 0.0.15+4
 
 * Fix [BehaviorSubject] instantiation.
