@@ -45,6 +45,7 @@ extension DeviceDirectionAngleExtension on DeviceDirection {
   double difference(DeviceDirection direction) {
     double diff = direction.degrees - this.degrees;
     if (diff == 270) return -90;
+    else if (diff == -270) return 90;
     else return diff;
   }
 }

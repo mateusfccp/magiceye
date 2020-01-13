@@ -1,11 +1,16 @@
+## 0.0.14+4
+
+* Fix for [DeviceDirection.difference].
+* Tests for [DeviceDirection.difference].
+
 ## 0.0.14+1
 
-* Adjustment on [difference] method
+* Adjustment on [DeviceDirection.difference] method.
 
 ## 0.0.14
 
 * Added a method to returs the difference of directions in degrees.
-* See [DeviceDirecton.difference].
+* See [DeviceDirection.difference].
 
 ## 0.0.13+4
 
