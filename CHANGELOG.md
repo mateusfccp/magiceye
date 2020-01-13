@@ -1,3 +1,7 @@
+## 0.0.14+1
+
+* Adjustment on [difference] method
+
 ## 0.0.14
 
 * Added a method to returs the difference of directions in degrees.

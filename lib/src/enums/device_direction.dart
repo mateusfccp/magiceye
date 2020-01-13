@@ -43,8 +43,8 @@ extension DeviceDirectionAngleExtension on DeviceDirection {
   /// 
   /// When the difference is 180 degrees, the angle returned is positive.
   double difference(DeviceDirection direction) {
-    double diff = this.degrees - direction.degrees;
-    if (this.degrees - direction.degrees == 270) return -90;
+    double diff = direction.degrees - this.degrees;
+    if (diff == 270) return -90;
     else return diff;
   }
 }
