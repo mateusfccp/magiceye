@@ -3,7 +3,7 @@
 An abstraction on top of flutter camera.
 
 [![Version](https://img.shields.io/pub/v/magiceye)](https://pub.dev/packages/magiceye)
-[![Build](https://img.shields.io/github/workflow/status/mateusfccp/magiceye/Test,%20build%20and%20deploy)](https://github.com/mateusfccp/magiceye/actions?query=workflow%3A%22Test%2C+build+and+deploy%22)
+[![Build](https://img.shields.io/github/workflow/status/mateusfccp/magiceye/Flutter)](https://github.com/mateusfccp/magiceye/actions?query=workflow%3A%22Test%2C+build+and+deploy%22)
 [![License](https://img.shields.io/github/license/mateusfccp/magiceye)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 ## Features
