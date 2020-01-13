@@ -1,4 +1,4 @@
-name:  Test, build and deploy
+name:  Flutter
 on: [push,pull_request]
 
 jobs:
