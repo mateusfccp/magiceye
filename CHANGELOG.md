@@ -1,3 +1,7 @@
+## 0.0.15+4
+
+* Fix [BehaviorSubject] instantiation.
+
 ## 0.0.15
 
 * Little improvement on NaviveDeviceDirection handling.

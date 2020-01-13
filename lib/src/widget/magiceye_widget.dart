@@ -87,7 +87,8 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
   final BehaviorSubject<DeviceDirection> _orientation =
       NativeDeviceOrientationCommunicator()
           .onOrientationChanged(useSensor: true)
-          .map((orientation) => DeviceDirection.values[orientation.index]);
+          .map((orientation) => DeviceDirection.values[orientation.index])
+          .shareValue();
 
   /// Creates a MagicEye component.
   MagicEye({
