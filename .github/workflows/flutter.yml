@@ -13,4 +13,5 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter analyze
-      - run: flutter pub run test --color ./test/device_direction_test.dart
+      - name: Tests for DeviceDirection
+        run: flutter pub run test --color ./test/device_direction_test.dart
