@@ -84,7 +84,10 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
   final Set<DeviceDirection> allowedDirections;
 
   final MagicEyeBloc _bloc;
-  final BehaviorSubject<DeviceDirection> _orientation = BehaviorSubject();
+  final BehaviorSubject<DeviceDirection> _orientation =
+      NativeDeviceOrientationCommunicator()
+          .onOrientationChanged(useSensor: true)
+          .map((orientation) => DeviceDirection.values[orientation.index]);
 
   /// Creates a MagicEye component.
   MagicEye({
@@ -113,42 +116,34 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
         initialData: _bloc.controller.value,
         builder: (context, snapshot) => snapshot.data.fold<Widget>(
           () => Center(child: loadingWidget),
-          (controller) => NativeDeviceOrientationReader(
-            useSensor: true,
-            builder: (context) {
-              _orientation.add(DeviceDirection.values[
-                  NativeDeviceOrientationReader.orientation(context).index]);
-
-              return Stack(
-                alignment: AlignmentDirectional.bottomCenter,
-                children: [
-                  AspectRatio(
-                    aspectRatio: controller.value.aspectRatio,
-                    child: Stack(
-                      children: <Widget>[
-                        CameraPreview(controller),
-                        previewLayer(
-                          context,
-                          PreviewLayerContext(
-                            allowedDirections: allowedDirections,
-                            direction: _orientation,
-                          ),
-                        ),
-                      ],
+          (controller) => Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: [
+              AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: Stack(
+                  children: <Widget>[
+                    CameraPreview(controller),
+                    previewLayer(
+                      context,
+                      PreviewLayerContext(
+                        allowedDirections: allowedDirections,
+                        direction: _orientation,
+                      ),
                     ),
-                  ),
-                  controlLayer(
-                    context,
-                    ControlLayerContext(
-                      allowedCameras: allowedCameras,
-                      allowedDirections: allowedDirections,
-                      bloc: _bloc,
-                      direction: _orientation,
-                    ),
-                  ),
-                ],
-              );
-            },
+                  ],
+                ),
+              ),
+              controlLayer(
+                context,
+                ControlLayerContext(
+                  allowedCameras: allowedCameras,
+                  allowedDirections: allowedDirections,
+                  bloc: _bloc,
+                  direction: _orientation,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -162,6 +157,7 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
   /// Releases the widget's resources.
   void dispose() {
     _bloc.dispose();
+    _orientation.close();
     WidgetsBinding.instance.removeObserver(this);
   }
 

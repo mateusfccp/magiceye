@@ -1,3 +1,7 @@
+## 0.0.15
+
+* Little improvement on NaviveDeviceDirection handling.
+
 ## 0.0.14+4
 
 * Fix for [DeviceDirection.difference].

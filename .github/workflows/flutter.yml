@@ -12,4 +12,5 @@ jobs:
           flutter-version: '1.12.13+hotfix.5'
           channel: 'stable'
       - run: flutter pub get
-      - run: flutter  analyze
+      - run: flutter analyze
+      - run: flutter pub run test --color ./test/device_direction_test.dart
