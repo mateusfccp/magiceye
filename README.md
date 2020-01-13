@@ -1,4 +1,4 @@
-![MagicEye](https://raw.githubusercontent.com/mateusfccp/magiceye/master/doc/logo_title.svg)
+![MagicEye](https://raw.githubusercontent.com/mateusfccp/magiceye/master/doc/logo_title.png)
 
 An abstraction on top of flutter camera.
 
