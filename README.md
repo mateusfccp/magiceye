@@ -13,7 +13,7 @@ An abstraction on top of flutter camera.
   - Handle camera status when app activity change
 - Can be used out-of-the-box by simply calling `MagicEye().push(context)`
 - Can be customized with *layers*
-- Come with a few, pre-baked, *preview layers*
+- Come with a few, pre-baked, [*preview layers*](https://pub.dev/documentation/magiceye/latest/magiceye/PreviewLayer-class.html)
 - Has a functional API leveraged by [dartz](https://github.com/spebbe/dartz)
 
 
@@ -51,14 +51,14 @@ result.fold(
 );
 ```
 
-> :warning **Disclaimer:** MagicEye widget can be used with `Navigator.push` instead. However, the disposal of resources won't be handled automatically. Use with caution.
+> **Disclaimer:** MagicEye widget can be used with `Navigator.push` instead. However, the disposal of resources won't be handled automatically. Use with caution.
 
 You can customize some functionality of the camera passing parameters to the `MagicEye` constructor. For detailed info, consult its [page on the documentation](https://pub.dev/documentation/magiceye/latest/magiceye/MagicEye-class.html).
 
+
 ## Layers
 
-Although MagicEye may be used as is, you can customize it's `controlLayer` and `previewLayer`. Both receives the
-necessary context and expects to return a `Widget`.
+Although MagicEye may be used as is, you can customize it's `controlLayer` and `previewLayer`. Both receives the necessary context and expects to return a `Widget`.
 
 You can see examples of custom layers in the source:
 
@@ -69,22 +69,15 @@ In the near future, more and simpler examples will be provided in the [example](
 
 ### Preview Layer
 
-The Preview Layer is, usually, used for graphical-only widgets, although it accepts any `Widget`. The canvas is
-limited to the preview area, so if the preview aspect ratio is different from the device's aspect ratio, the
-canvas will not include the black area.
+The Preview Layer is, usually, used for graphical-only widgets, although it accepts any `Widget`. The canvas is limited to the preview area, so if the preview aspect ratio is different from the device's aspect ratio, the canvas will not include the black area.
 
-MagicEye provide some default preview layers through `PackageLayer`. An example is `PreviewLayer.grid`, which
-shows a grid on the preview to help with the Rule of Thirds.
+MagicEye provide some default preview layers through [`PreviewLayer`](https://pub.dev/documentation/magiceye/latest/magiceye/PreviewLayer-class.html). An example is [`PreviewLayer.grid`](https://pub.dev/documentation/magiceye/latest/magiceye/PreviewLayer/grid.html), which shows a grid on the preview to help with the Rule of Thirds.
 
-To make a custom preview layer, `previewLayer`  accepts a [Widget Function(BuildContext, PreviewLayerContext)].
-`PreviewLayerContext` provides the `allowedDirections` parameter used on MagicEye instatiation. Also, a
-`direction`  stream emits info about the current device orientation.
+To make a custom preview layer, `previewLayer`  accepts a `Widget Function(BuildContext, PreviewLayerContext)`. [`PreviewLayerContext`](https://pub.dev/documentation/magiceye/latest/magiceye/PreviewLayerContext-class.html) provides the `allowedDirections` parameter used on MagicEye instatiation. Also, a `direction`  stream emits info about the current device orientation.
 
 ### Control Layer
 
-The Control Layer is used to render the controls of the camera. Its canvas is the entire device screen.
-The parameter `controlLayer` is similar to `previewLayer`, but provides a `ControlLayerContext` instead, which
-gives you access to the camera functions like `takePicture`.
+The Control Layer is used to render the controls of the camera. Its canvas is the entire device screen. The parameter `controlLayer` is similar to `previewLayer`, but provides a [`ControlLayerContext`](https://pub.dev/documentation/magiceye/latest/magiceye/ControlLayerContext-class.html) instead, which gives you access to the camera functions like [`takePicture`](https://pub.dev/documentation/magiceye/latest/magiceye/ControlLayerContext/takePicture.html).
 
 <hr/>
 
