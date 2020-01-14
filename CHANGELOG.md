@@ -1,3 +1,8 @@
+## 0.1.0+3
+
+* Updated README.md
+* Formatting
+
 ## 0.1.0+2
 
 * Updated README.md
