@@ -1,8 +1,14 @@
+## 0.1.2
+
+* Assert that `MagicEye` parameters are not `null`, except for `key`
+* Export default layers
+* Constrained example orientation with `SystemChrome.setPreferredOrientations`
+
 ## 0.1.1
 
 * Now the default allowed directions is not `portrait`, but all of them, as it's more intuitive
 * Little improvement on in-code documentation
-* **Possibly Breaking Change:** Change DeviceDirection enum to represent more intuitively the directions. Now, `landscape` is `landscapeLeft`, and `landscapeReversed` is  `landscapeRight`.
+* **Possibly Breaking Change:** Change DeviceDirection enum to represent more intuitively the directions. Now, `landscape` is `landscapeLeft`, and `landscapeReversed` is  `landscapeRight`
 
 ## 0.1.0+3
 
