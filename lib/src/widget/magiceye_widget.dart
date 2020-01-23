@@ -120,7 +120,13 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
           defaultDirection: defaultDirection,
           allowedCameras: allowedCameras,
         ),
-        this.controlLayer = defaultCameraControlLayer() {
+        this.controlLayer = defaultCameraControlLayer(),
+        assert(loadingWidget != null),
+        assert(previewLayer != null),
+        assert(resolutionPreset != null),
+        assert(defaultDirection != null),
+        assert(allowedCameras != null),
+        assert(allowedDirections != null) {
     WidgetsBinding.instance.addObserver(this);
   }
 
