@@ -1,13 +1,11 @@
 import 'dart:math';
 
 /// The device direction.
-///
-/// [landscape] is the left landscape.
 enum DeviceDirection {
   portrait,
   portraitReversed,
-  landscape,
-  landscapeReversed,
+  landscapeLeft,
+  landscapeRight,
   unknown
 }
 
@@ -21,10 +19,10 @@ extension DeviceDirectionAngleExtension on DeviceDirection {
       case DeviceDirection.portraitReversed:
         return 180;
         break;
-      case DeviceDirection.landscape:
+      case DeviceDirection.landscapeLeft:
         return 90;
         break;
-      case DeviceDirection.landscapeReversed:
+      case DeviceDirection.landscapeRight:
         return 270;
         break;
       default:

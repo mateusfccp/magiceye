@@ -14,10 +14,10 @@ void main() {
   );
 
   test(
-    'Difference between portrait and landscape must be 90',
+    'Difference between portrait and landscapeLeft must be 90',
     () {
       expect(
-        DeviceDirection.portrait.difference(DeviceDirection.landscape),
+        DeviceDirection.portrait.difference(DeviceDirection.landscapeLeft),
         90,
       );
     },
@@ -36,52 +36,52 @@ void main() {
   );
 
   test(
-    'Difference between portrait and landscapeReversed must be -90',
+    'Difference between portrait and landscapeRight must be -90',
     () {
       expect(
-        DeviceDirection.portrait.difference(DeviceDirection.landscapeReversed),
+        DeviceDirection.portrait.difference(DeviceDirection.landscapeRight),
         -90,
       );
     },
   );
 
-  // Landscape
+  // LandscapeLeft
   test(
-    'Difference between landscape and portrait must be -90',
+    'Difference between landscapeLeft and portrait must be -90',
     () {
       expect(
-        DeviceDirection.landscape.difference(DeviceDirection.portrait),
+        DeviceDirection.landscapeLeft.difference(DeviceDirection.portrait),
         -90,
       );
     },
   );
 
   test(
-    'Difference between landscape and landscape must be 0',
+    'Difference between landscapeLeft and landscapeLeft must be 0',
     () {
       expect(
-        DeviceDirection.landscape.difference(DeviceDirection.landscape),
+        DeviceDirection.landscapeLeft.difference(DeviceDirection.landscapeLeft),
         0,
       );
     },
   );
 
   test(
-    'Difference between landscape and portraitReversed must be 90',
+    'Difference between landscapeLeft and portraitReversed must be 90',
     () {
       expect(
-        DeviceDirection.landscape.difference(DeviceDirection.portraitReversed),
+        DeviceDirection.landscapeLeft.difference(DeviceDirection.portraitReversed),
         90,
       );
     },
   );
 
   test(
-    'Difference between landscape and landscapeReversed must be 180',
+    'Difference between landscapeLeft and landscapeRight must be 180',
     () {
       expect(
-        DeviceDirection.landscape
-            .difference(DeviceDirection.landscapeReversed)
+        DeviceDirection.landscapeLeft
+            .difference(DeviceDirection.landscapeRight)
             .abs(),
         180,
       );
@@ -102,10 +102,10 @@ void main() {
   );
 
   test(
-    'Difference between portraitReversed and landscape must be -90',
+    'Difference between portraitReversed and landscapeLeft must be -90',
     () {
       expect(
-        DeviceDirection.portraitReversed.difference(DeviceDirection.landscape),
+        DeviceDirection.portraitReversed.difference(DeviceDirection.landscapeLeft),
         -90,
       );
     },
@@ -123,33 +123,33 @@ void main() {
   );
 
   test(
-    'Difference between portraitReversed and landscapeReversed must be 90',
+    'Difference between portraitReversed and landscapeRight must be 90',
     () {
       expect(
         DeviceDirection.portraitReversed
-            .difference(DeviceDirection.landscapeReversed),
+            .difference(DeviceDirection.landscapeRight),
         90,
       );
     },
   );
 
-  // LandscapeReversed
+  // LandscapeRight
   test(
-    'Difference between landscapeReversed and portrait must be 90',
+    'Difference between landscapeRight and portrait must be 90',
     () {
       expect(
-        DeviceDirection.landscapeReversed.difference(DeviceDirection.portrait),
+        DeviceDirection.landscapeRight.difference(DeviceDirection.portrait),
         90,
       );
     },
   );
 
   test(
-    'Difference between landscapeReversed and landscape must be 180',
+    'Difference between landscapeRight and landscapeLeft must be 180',
     () {
       expect(
-        DeviceDirection.landscapeReversed
-            .difference(DeviceDirection.landscape)
+        DeviceDirection.landscapeRight
+            .difference(DeviceDirection.landscapeLeft)
             .abs(),
         180,
       );
@@ -157,10 +157,10 @@ void main() {
   );
 
   test(
-    'Difference between landscapeReversed and portraitReversed must be -90',
+    'Difference between landscapeRight and portraitReversed must be -90',
     () {
       expect(
-        DeviceDirection.landscapeReversed
+        DeviceDirection.landscapeRight
             .difference(DeviceDirection.portraitReversed),
         -90,
       );
@@ -168,11 +168,11 @@ void main() {
   );
 
   test(
-    'Difference between landscapeReversed and landscapeReversed must be 0',
+    'Difference between landscapeRight and landscapeRight must be 0',
     () {
       expect(
-        DeviceDirection.landscapeReversed
-            .difference(DeviceDirection.landscapeReversed),
+        DeviceDirection.landscapeRight
+            .difference(DeviceDirection.landscapeRight),
         0,
       );
     },
