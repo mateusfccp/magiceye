@@ -88,7 +88,10 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
   /// The camera directions that will be available to the camera.
   final Set<DeviceDirection> allowedDirections;
 
+  /// The camera logic component.
   final MagicEyeBloc _bloc;
+
+  /// A stream that emits every change on device's direction.
   final BehaviorSubject<DeviceDirection> _orientation =
       NativeDeviceOrientationCommunicator()
           .onOrientationChanged(useSensor: true)
