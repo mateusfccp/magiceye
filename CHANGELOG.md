@@ -1,3 +1,9 @@
+## 0.1.1
+
+* Now the default allowed directions is not `portrait`, but all of them, as it's more intuitive
+* Little improvement on in-code documentation
+* **Possibly Breaking Change:** Change DeviceDirection enum to represent more intuitively the directions. Now, `landscape` is `landscapeLeft`, and `landscapeReversed` is  `landscapeRight`.
+
 ## 0.1.0+3
 
 * Updated README.md
@@ -13,31 +19,31 @@
 
 ## 0.1.0
 
-* API has reached a reasonable stability.
-* README.md has been updated with enough info.
-* Little update on the documentation.
+* API has reached a reasonable stability
+* README.md has been updated with enough info
+* Little update on the documentation
 
 ## 0.0.15+4
 
-* Fix [BehaviorSubject] instantiation.
+* Fix [BehaviorSubject] instantiation
 
 ## 0.0.15
 
-* Little improvement on NaviveDeviceDirection handling.
+* Little improvement on NaviveDeviceDirection handling
 
 ## 0.0.14+4
 
-* Fix for [DeviceDirection.difference].
-* Tests for [DeviceDirection.difference].
+* Fix for [DeviceDirection.difference]
+* Tests for [DeviceDirection.difference]
 
 ## 0.0.14+1
 
-* Adjustment on [DeviceDirection.difference] method.
+* Adjustment on [DeviceDirection.difference] method
 
 ## 0.0.14
 
-* Added a method to returs the difference of directions in degrees.
-* See [DeviceDirection.difference].
+* Added a method to returs the difference of directions in degrees
+* See [DeviceDirection.difference]
 
 ## 0.0.13+4
 
@@ -79,14 +85,14 @@
 
 ## 0.0.9
 
-* This breaks the API.
-* Instead of returning an [Option<String>], the [.push] method now returns a [Either<MagicEyeException, String>], in concordance with [takePicture] method. This change provides an efficient way to handle camera exceptions.
+* This breaks the API
+* Instead of returning an [Option<String>], the [.push] method now returns a [Either<MagicEyeException, String>], in concordance with [takePicture] method. This change provides an efficient way to handle camera exceptions
 * Improvements on documentation
 
 ## 0.0.8
 
-* Make functions [toRadian] and [toDegrees] for [DeviceDirection] into extension methods ([.radian] and [.degrees] respectively).
-* For this, raised Dart SDK requirement to 2.7.
+* Make functions [toRadian] and [toDegrees] for [DeviceDirection] into extension methods ([.radian] and [.degrees] respectively)
+* For this, raised Dart SDK requirement to 2.7
 * Also, reraised required path_provider version to 1.5.1
 
 ## 0.0.7
@@ -111,7 +117,7 @@
 
 ## 0.0.2
 
-* Instead of [pushWithConfirmation] (not yet implemented), the confirmation screen has been implemented on the [defaultCameraControlLayer] method.
+* Instead of [pushWithConfirmation] (not yet implemented), the confirmation screen has been implemented on the [defaultCameraControlLayer] method
 * Change on package structure
 * Little change on API: instead of returning a String, now the MagicEye return an [Option<String>]. Futurely, it will return a [Either<MagicEyeException, String>]
 
@@ -130,7 +136,7 @@
 
 ### Other info
 
-The readme will be made later. Thanks.
+The readme will be made later. Thanks
 
 The example folder is working, but its just a personal test of the package. A proper example with MREs and diverse
-options will be available in the future.
+options will be available in the future
