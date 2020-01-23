@@ -109,7 +109,12 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
       DeviceCamera.back,
       DeviceCamera.front,
     },
-    this.allowedDirections = const {DeviceDirection.portrait},
+    this.allowedDirections = const {
+      DeviceDirection.portrait,
+      DeviceDirection.landscapeLeft,
+      DeviceDirection.portraitReversed,
+      DeviceDirection.landscapeRight,
+    },
   })  : this._bloc = MagicEyeBloc(
           resolutionPreset: resolutionPreset,
           defaultDirection: defaultDirection,
