@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../enums/device_direction.dart';
 import 'circle.dart';
@@ -9,7 +10,7 @@ import 'circle.dart';
 class CircleButton extends StatelessWidget {
   final IconData icon;
   final void Function() onPressed;
-  final Stream<DeviceDirection> orientationStream;
+  final BehaviorSubject<DeviceDirection> orientationStream;
 
   const CircleButton({
     Key key,
@@ -25,13 +26,13 @@ class CircleButton extends StatelessWidget {
     return Circle(
       radius: 25,
       child: StreamBuilder<DeviceDirection>(
-        initialData: DeviceDirection.portrait,
+        initialData: orientationStream.value,
         stream: orientationStream ?? Stream.value(DeviceDirection.portrait),
         builder: (context, snapshot) {
           final int newOrientation = snapshot.data.degrees.toInt();
 
           orientations = Tuple2(
-            orientations.value1,
+            orientations.value2,
             newOrientation,
           );
 
