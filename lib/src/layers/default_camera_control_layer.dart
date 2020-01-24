@@ -138,7 +138,9 @@ class _BottomPictureButtons extends StatelessWidget {
                     orientationStream: layerContext.direction,
                   ),
                   secondCurve: Curves.easeOutQuint,
-                  secondChild: SizedBox(width: 50, height: 50),
+                  secondChild: AbsorbPointer(
+                    child: SizedBox(width: 50, height: 50),
+                  ),
                   crossFadeState: enabled
                       ? CrossFadeState.showFirst
                       : CrossFadeState.showSecond,
