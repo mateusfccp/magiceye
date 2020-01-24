@@ -1,3 +1,7 @@
+## 0.1.3
+
+* Fix defaultCameraControlLayer secondChild getting the firstChild hit
+
 ## 0.1.2
 
 * Assert that `MagicEye` parameters are not `null`, except for `key`
