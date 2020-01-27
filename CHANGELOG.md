@@ -1,3 +1,7 @@
+## 0.1.3+1
+
+* Fix regression (issue #3)
+
 ## 0.1.3
 
 * Fix defaultCameraControlLayer secondChild getting the firstChild hit
