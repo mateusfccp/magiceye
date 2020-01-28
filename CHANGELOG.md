@@ -1,3 +1,9 @@
+## 0.1.3+2
+
+* Added a [`analysis_options.yaml`](https://dart.dev/guides/language/analysis-options) file
+  * Included [`pedantic`](https://github.com/dart-lang/pedantic) linter rules
+  * Set up stricter rules for static anasysis
+
 ## 0.1.3+1
 
 * Fix regression (issue #3)

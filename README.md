@@ -31,7 +31,7 @@ Add `magiceye` as a dependency in your project:
 
 ```yaml
 dependencies:
-  magiceye: ^0.1.0
+  magiceye: ^0.1.3
 ```
 
 After this, you should then run `flutter packages upgrade` or update your packages with your IDE/editor funcionalities.
