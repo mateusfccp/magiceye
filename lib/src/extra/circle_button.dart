@@ -36,7 +36,7 @@ class CircleButton extends StatelessWidget {
             newOrientation,
           );
 
-          return TweenAnimationBuilder(
+          return TweenAnimationBuilder<int>(
             curve: Curves.bounceOut,
             duration: Duration(milliseconds: 500),
             tween:

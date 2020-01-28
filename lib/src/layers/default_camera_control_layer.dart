@@ -161,7 +161,7 @@ class _BottomPictureButtons extends StatelessWidget {
 
 class _BottomConfirmationButtons extends StatelessWidget {
   final String path;
-  final pathStream;
+  final BehaviorSubject<_CameraState> pathStream;
 
   const _BottomConfirmationButtons({
     Key key,
@@ -178,7 +178,7 @@ class _BottomConfirmationButtons extends StatelessWidget {
             CircleButton(
               icon: Icons.close,
               onPressed: () {
-                final Directory directory = new Directory(path);
+                final Directory directory = Directory(path);
                 directory
                     .delete(recursive: true)
                     .then((_) => pathStream.add(const _Idle()));

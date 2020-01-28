@@ -1,3 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:magiceye/magiceye.dart';
 
-Widget defaultCameraPreviewLayer(_, __) => Container();
+Widget defaultCameraPreviewLayer(BuildContext _, PreviewLayerContext __) =>
+    Container();
