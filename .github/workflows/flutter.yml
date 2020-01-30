@@ -2,8 +2,39 @@ name:  Flutter
 on: [push,pull_request]
 
 jobs:
-  test:
+  linux-build:
+    name: "Build on Linux"
     runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v1
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '1.12.13+hotfix.5'
+          channel: 'stable'
+      - run: flutter pub get
+      - run: flutter analyze
+      - name: Tests for DeviceDirection
+        run: flutter pub run test --color ./test/device_direction_test.dart
+        
+  macos-build:
+    name: "Build on macOS"
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v1
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '1.12.13+hotfix.5'
+          channel: 'stable'
+      - run: flutter pub get
+      - run: flutter analyze
+      - name: Tests for DeviceDirection
+        run: flutter pub run test --color ./test/device_direction_test.dart
+      
+  windows-build:
+    name: "Build on Windows"
+    runs-on: windows-latest
     
     steps:
       - uses: actions/checkout@v1
