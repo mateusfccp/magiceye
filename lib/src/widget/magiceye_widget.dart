@@ -98,6 +98,9 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
           .map((orientation) => DeviceDirection.values[orientation.index])
           .shareValue() as BehaviorSubject<DeviceDirection>;
 
+  /// The alignment of the preview in the stack
+  final AlignmentDirectional previewAlignment;
+
   /// Creates a MagicEye component.
   MagicEye({
     Key key,
@@ -115,6 +118,7 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
       DeviceDirection.portraitReversed,
       DeviceDirection.landscapeRight,
     },
+    this.previewAlignment = AlignmentDirectional.topCenter,
   })  : this._bloc = MagicEyeBloc(
           resolutionPreset: resolutionPreset,
           defaultDirection: defaultDirection,
@@ -137,7 +141,7 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
         builder: (context, snapshot) => snapshot.data.fold<Widget>(
           () => Center(child: loadingWidget),
           (controller) => Stack(
-            alignment: AlignmentDirectional.bottomCenter,
+            alignment: this.previewAlignment,
             children: [
               AspectRatio(
                 aspectRatio: controller.value.aspectRatio,
@@ -154,13 +158,19 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
                   ],
                 ),
               ),
-              controlLayer(
-                context,
-                ControlLayerContext(
-                  allowedCameras: allowedCameras,
-                  allowedDirections: allowedDirections,
-                  bloc: _bloc,
-                  direction: _orientation,
+              Positioned(
+                bottom: 0,
+                top: 0,
+                left: 0,
+                right: 0,
+                child: controlLayer(
+                  context,
+                  ControlLayerContext(
+                    allowedCameras: allowedCameras,
+                    allowedDirections: allowedDirections,
+                    bloc: _bloc,
+                    direction: _orientation,
+                  ),
                 ),
               ),
             ],

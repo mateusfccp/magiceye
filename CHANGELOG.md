@@ -1,3 +1,8 @@
+## 0.1.4
+
+* Added a new parameter to `MagicEye` to control preview alignment.
+* **Possibly Breaking Change:** By default, the alignment is now `topCenter`.
+
 ## 0.1.3+2
 
 * Added a [`analysis_options.yaml`](https://dart.dev/guides/language/analysis-options) file

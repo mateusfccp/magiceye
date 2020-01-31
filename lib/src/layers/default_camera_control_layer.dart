@@ -59,7 +59,7 @@ Widget Function(BuildContext, ControlLayerContext) defaultCameraControlLayer() {
               }
 
               return Stack(
-                alignment: Alignment.bottomCenter,
+                alignment: Alignment.topCenter,
                 children: <Widget>[
                   if (snapshot.data is _TakingPicture ||
                       snapshot.data is _WithPicture)
@@ -73,16 +73,26 @@ Widget Function(BuildContext, ControlLayerContext) defaultCameraControlLayer() {
                       ),
                     ),
                   if (snapshot.data is _WithPicture)
-                    _BottomConfirmationButtons(
-                      path: (snapshot.data as _WithPicture).path,
-                      pathStream: cameraState,
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: _BottomConfirmationButtons(
+                        path: (snapshot.data as _WithPicture).path,
+                        pathStream: cameraState,
+                      ),
                     ),
                   if (snapshot.data is _TakingPicture)
                     Center(child: CircularProgressIndicator()),
                   if (snapshot.data is _Idle)
-                    _BottomPictureButtons(
-                      layerContext: layerContext,
-                      cameraState: cameraState,
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: _BottomPictureButtons(
+                        layerContext: layerContext,
+                        cameraState: cameraState,
+                      ),
                     ),
                 ],
               );
