@@ -35,13 +35,13 @@ extension DeviceDirectionAngleExtension on DeviceDirection {
   double get degrees => _toDegrees(this);
 
   /// The direction angle in radians.
-  double get radians => this.degrees * pi / 180;
+  double get radians => degrees * pi / 180;
 
   /// The difference, in degrees, between this and [direction].
   ///
   /// When the difference is 180 degrees, the angle returned is positive.
   double difference(DeviceDirection direction) {
-    double diff = direction.degrees - this.degrees;
+    final diff = direction.degrees - degrees;
     if (diff == 270) {
       return -90;
     } else if (diff == -270) {

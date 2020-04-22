@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +38,7 @@ class MagicEyeBloc {
   }) {
     availableCameras().then(
       (cameras) {
-        this._cameras = {
+        _cameras = {
           DeviceCamera.back: cameras
               .where(
                   (camera) => camera.lensDirection == CameraLensDirection.back)
@@ -81,18 +79,18 @@ class MagicEyeBloc {
   Future<Either<MagicEyeException, String>> takePicture(
       {final bool temporary = false}) async {
     // Checks if there is a camera controller or return an error.
-    final Either<MagicEyeException, CameraController> _controller =
+    final _controller =
         controller.value.fold<Either<MagicEyeException, CameraController>>(
       () => Left(
         MagicEyeException(
-          message: "Camera controller not found!",
+          message: 'Camera controller not found!',
         ),
       ),
       (controller) => Right(controller),
     );
 
     // Select the path based on [temporary] parameter.
-    final Future<Directory> Function() pathFunction =
+    final pathFunction =
         temporary ? getTemporaryDirectory : getApplicationDocumentsDirectory;
 
     // Takes the picture and saves to the path, or return an error.
@@ -100,8 +98,8 @@ class MagicEyeBloc {
       (error) => Future.value(Left(error)),
       (controller) => pathFunction().then<Either<MagicEyeException, String>>(
         (directory) async {
-          final String path =
-              "${directory.path}/${DateTime.now().microsecondsSinceEpoch}.jpg";
+          final path =
+              '${directory.path}/${DateTime.now().microsecondsSinceEpoch}.jpg';
 
           try {
             await controller.takePicture(path);
@@ -141,7 +139,7 @@ class MagicEyeBloc {
   /// [Some<UnallowedDirectionError>].
   ///
   /// If the switchs succeeds, returns [None].
-  Option<UnallowedCameraError> switchCamera() => this.controller.value.fold(
+  Option<UnallowedCameraError> switchCamera() => controller.value.fold(
         none,
         (controller) => selectCamera(
             controller.description.lensDirection == CameraLensDirection.back
@@ -151,19 +149,18 @@ class MagicEyeBloc {
 
   void _setCamera(final CameraDescription camera) {
     // Create new controller for [camera]
-    final CameraController controller =
-        CameraController(camera, this.resolutionPreset);
+    final controller = CameraController(camera, resolutionPreset);
 
     controller.initialize().then((_) => this.controller.add(Some(controller)));
   }
 
   /// Releases the resources of the BLoC.
   void dispose() {
-    this.controller.value.forEach((controller) => controller.dispose());
+    controller.value.forEach((controller) => controller.dispose());
     controller.close();
   }
 
-  void refreshCamera() => this.controller.value.fold(
+  void refreshCamera() => controller.value.fold(
         () {},
         (controller) => _setCamera(controller.description),
       );

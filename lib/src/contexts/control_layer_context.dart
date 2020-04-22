@@ -59,7 +59,7 @@ class ControlLayerContext {
         assert(allowedDirections != null),
         assert(direction != null),
         assert(bloc != null),
-        this.selectCamera = bloc.selectCamera,
-        this.switchCamera = bloc.switchCamera,
-        this.takePicture = bloc.takePicture;
+        selectCamera = bloc.selectCamera,
+        switchCamera = bloc.switchCamera,
+        takePicture = bloc.takePicture;
 }

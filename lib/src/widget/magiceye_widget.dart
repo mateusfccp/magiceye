@@ -119,12 +119,12 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
       DeviceDirection.landscapeRight,
     },
     this.previewAlignment = AlignmentDirectional.topCenter,
-  })  : this._bloc = MagicEyeBloc(
+  })  : _bloc = MagicEyeBloc(
           resolutionPreset: resolutionPreset,
           defaultDirection: defaultDirection,
           allowedCameras: allowedCameras,
         ),
-        this.controlLayer = defaultCameraControlLayer(),
+        controlLayer = defaultCameraControlLayer(),
         assert(loadingWidget != null),
         assert(previewLayer != null),
         assert(resolutionPreset != null),
@@ -141,7 +141,7 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
         builder: (context, snapshot) => snapshot.data.fold<Widget>(
           () => Center(child: loadingWidget),
           (controller) => Stack(
-            alignment: this.previewAlignment,
+            alignment: previewAlignment,
             children: [
               AspectRatio(
                 aspectRatio: controller.value.aspectRatio,
@@ -201,10 +201,8 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
   Future<Either<MagicEyeException, String>> push(BuildContext context) =>
       Navigator.of(context)
           .push<Either<MagicEyeException, String>>(
-            MaterialPageRoute(
-              builder: this.build,
-            ),
+            MaterialPageRoute(builder: build),
           )
           .then<Either<MagicEyeException, String>>(id)
-          .whenComplete(this.dispose);
+          .whenComplete(dispose);
 }

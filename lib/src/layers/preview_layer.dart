@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:magiceye/magiceye.dart';
 
 typedef PreviewLayerBuilder = Widget Function(
-    BuildContext, PreviewLayerContext);
+  BuildContext,
+  PreviewLayerContext,
+);
 
 /// Predefined preview layers to be used on [MagicEye] constructor.
 ///
@@ -165,7 +167,7 @@ class _GridPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
+    final paint = Paint()
       ..strokeWidth = 1
       ..color = color;
 

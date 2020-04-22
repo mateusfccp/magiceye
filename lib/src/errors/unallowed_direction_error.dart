@@ -6,7 +6,7 @@ class UnallowedCameraError extends Error {
   final DeviceCamera direction;
 
   /// A message describing the error.
-  String get message => "";
+  String get message => '';
 
   UnallowedCameraError(this.direction);
 }

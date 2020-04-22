@@ -13,6 +13,7 @@ class Circle extends StatelessWidget {
   })  : assert(radius != null),
         super(key: key);
 
+  @override
   Widget build(BuildContext context) => Container(
         width: radius * 2,
         height: radius * 2,

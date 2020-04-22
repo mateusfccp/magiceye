@@ -20,8 +20,9 @@ class CircleButton extends StatelessWidget {
   })  : assert(icon != null),
         super(key: key);
 
+  @override
   Widget build(BuildContext context) {
-    Tuple2<int, int> orientations = Tuple2(0, 0);
+    var orientations = Tuple2(0, 0);
 
     return Circle(
       radius: 25,
@@ -29,7 +30,7 @@ class CircleButton extends StatelessWidget {
         initialData: orientationStream?.value ?? DeviceDirection.portrait,
         stream: orientationStream ?? Stream.value(DeviceDirection.portrait),
         builder: (context, snapshot) {
-          final int newOrientation = snapshot.data.degrees.toInt();
+          final newOrientation = snapshot.data.degrees.toInt();
 
           orientations = Tuple2(
             orientations.value2,

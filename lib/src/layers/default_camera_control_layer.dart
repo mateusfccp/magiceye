@@ -35,7 +35,7 @@ class _WithException extends _CameraState {
 }
 
 Widget Function(BuildContext, ControlLayerContext) defaultCameraControlLayer() {
-  BehaviorSubject<_CameraState> cameraState = BehaviorSubject.seeded(_Idle());
+  var cameraState = BehaviorSubject<_CameraState>.seeded(_Idle());
 
   return (context, layerContext) => Material(
         type: MaterialType.transparency,
@@ -127,7 +127,7 @@ class _BottomPictureButtons extends StatelessWidget {
               initialData: layerContext.direction.value,
               stream: layerContext.direction,
               builder: (context, snapshot) {
-                final bool enabled =
+                final enabled =
                     layerContext.allowedDirections.contains(snapshot.data);
 
                 return AnimatedCrossFade(
@@ -188,7 +188,7 @@ class _BottomConfirmationButtons extends StatelessWidget {
             CircleButton(
               icon: Icons.close,
               onPressed: () {
-                final Directory directory = Directory(path);
+                final directory = Directory(path);
                 directory
                     .delete(recursive: true)
                     .then((_) => pathStream.add(const _Idle()));
