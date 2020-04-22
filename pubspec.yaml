@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
   path_provider: ^1.5.1
   native_device_orientation: ^0.3.0
-  rxdart: ^0.23.1
+  rxdart: ^0.24.0
 
 dev_dependencies:
   test: ^1.9.4
