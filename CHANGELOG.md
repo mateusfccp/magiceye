@@ -1,3 +1,9 @@
+## 0.1.5
+
+* Upgrade `rxdart` to `^0.24.0`
+* Apply `pedantic` rules (for some reason, I forgot to include the package on 0.1.3+2, so my linter wouldn't behave correctly)
+* Remove `pubspec.lock` from git, as it is recommended for library packages.[¹](https://dart.dev/guides/libraries/private-files#pubspeclock) 
+
 ## 0.1.4
 
 * Added a new parameter to `MagicEye` to control preview alignment.
