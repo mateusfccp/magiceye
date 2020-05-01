@@ -1,3 +1,8 @@
+## 0.1.6
+
+* Upgrade `dartz` to `^0.9.0`
+* In this new version, we can now use `const None()` instead of simply `None()`, so I replaced all instances 🙃
+
 ## 0.1.5
 
 * Upgrade `rxdart` to `^0.24.0`
