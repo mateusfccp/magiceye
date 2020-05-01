@@ -11,8 +11,8 @@ import '../errors/unallowed_direction_error.dart';
 import '../exceptions/magiceye_exception.dart';
 
 class MagicEyeBloc {
-  final BehaviorSubject<Option<CameraController>> controller =
-      BehaviorSubject.seeded(None());
+  final controller =
+      BehaviorSubject<Option<CameraController>>.seeded(const None());
 
   Map<DeviceCamera, CameraDescription> _cameras = {
     DeviceCamera.back: null,
@@ -130,7 +130,7 @@ class MagicEyeBloc {
     }
 
     _setCamera(_cameras[cameraLensDirection]);
-    return None();
+    return const None();
   }
 
   /// Switches from back camera to front camera, and vice-versa.
@@ -140,7 +140,7 @@ class MagicEyeBloc {
   ///
   /// If the switchs succeeds, returns [None].
   Option<UnallowedCameraError> switchCamera() => controller.value.fold(
-        none,
+        () => const None(),
         (controller) => selectCamera(
             controller.description.lensDirection == CameraLensDirection.back
                 ? DeviceCamera.front
