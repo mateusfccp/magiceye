@@ -1,3 +1,7 @@
+## 0.1.6+1
+
+* Update pubspec.yaml
+
 ## 0.1.6
 
 * Upgrade `dartz` to `^0.9.0`
