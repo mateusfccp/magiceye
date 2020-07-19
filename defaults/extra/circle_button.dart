@@ -10,7 +10,7 @@ import 'circle.dart';
 class CircleButton extends StatelessWidget {
   final IconData icon;
   final void Function() onPressed;
-  final BehaviorSubject<DeviceDirection> orientationStream;
+  final ValueStream<DeviceDirection> orientationStream;
 
   const CircleButton({
     Key key,

@@ -1,23 +1,68 @@
 import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
+import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../enums/device_camera.dart';
-import '../errors/unallowed_direction_error.dart';
 import '../exceptions/magiceye_exception.dart';
+
+class Cameras {
+  final Option<CameraDescription> back;
+  final Option<CameraDescription> front;
+  final Option<CameraDescription> external;
+
+  bool get hasCameras => back.isSome() || front.isSome() || external.isSome();
+
+  const Cameras({
+    this.back = const None(),
+    this.front = const None(),
+    this.external = const None(),
+  });
+
+  Cameras copyWith({
+    Option<CameraDescription> back,
+    Option<CameraDescription> front,
+    Option<CameraDescription> external,
+  }) =>
+      Cameras(
+        back: back ?? this.back,
+        front: front ?? this.front,
+        external: external ?? this.external,
+      );
+
+  Cameras update(CameraDescription camera) {
+    switch (camera.lensDirection) {
+      case CameraLensDirection.back:
+        return copyWith(back: Some(camera));
+      case CameraLensDirection.front:
+        return copyWith(front: Some(camera));
+      case CameraLensDirection.external:
+        return copyWith(external: Some(camera));
+      default:
+        return this;
+    }
+  }
+
+  Option<CameraDescription> get(CameraLensDirection direction) {
+    switch (direction) {
+      case CameraLensDirection.back:
+        return back;
+      case CameraLensDirection.front:
+        return front;
+      case CameraLensDirection.external:
+        return external;
+      default:
+        return const None();
+    }
+  }
+}
 
 class MagicEyeBloc {
   final controller =
       BehaviorSubject<Option<CameraController>>.seeded(const None());
 
-  Map<DeviceCamera, CameraDescription> _cameras = {
-    DeviceCamera.back: null,
-    DeviceCamera.front: null,
-  };
+  final _cameras = BehaviorSubject.seeded(const Cameras());
 
   /// The resolution that will be used on the camera.
   ///
@@ -25,45 +70,56 @@ class MagicEyeBloc {
   final ResolutionPreset resolutionPreset;
 
   /// The camera direction that will be used when first opened.
-  final DeviceCamera defaultDirection;
-
-  /// The cameras that will be available to the camera.
-  final Set<DeviceCamera> allowedCameras;
+  final CameraLensDirection defaultDirection;
 
   MagicEyeBloc({
-    Key key,
     @required this.resolutionPreset,
     @required this.defaultDirection,
-    @required this.allowedCameras,
-  }) {
-    availableCameras().then(
-      (cameras) {
-        _cameras = {
-          DeviceCamera.back: cameras
-              .where(
-                  (camera) => camera.lensDirection == CameraLensDirection.back)
-              .first,
-          DeviceCamera.front: cameras
-              .where(
-                  (camera) => camera.lensDirection == CameraLensDirection.front)
-              .first,
-        };
+  });
 
-        _setCamera(_cameras[defaultDirection]);
+  /// Initializes the MagicEye bloc.
+  ///
+  /// The initialization happens in the following order:
+  /// * The available cameras are fetched and stored
+  /// * A listener is binded to the controller so that it is properly disposed
+  /// when changed
+  /// * The default camera is set
+  ///
+  /// Any of the preceding steps may fail. Thus, a
+  /// [Either<MagicEyeException, Unit>] is returned when the initialization is
+  /// finished with the result of the operation.
+  Future<Either<MagicEyeException, Unit>> initialize() async {
+    // Get all cameras from the camera plugin
+    final cameras = await availableCameras();
 
-        // Deal with the disposal of the controller resources everytime the controller changes
-        controller.pairwise().listen(
-              (controllers) => controllers.first.fold(
-                () {},
-                (controller) {
-                  // Delay the dispose of the controller until the next frame
-                  SchedulerBinding.instance
-                      .addPostFrameCallback((_) => controller.dispose);
-                },
-              ),
-            );
-      },
+    // Map all available cameras to the camera object
+    _cameras.add(
+      cameras.fold<Cameras>(
+        const Cameras(),
+        (value, element) => value.update(element),
+      ),
     );
+
+    if (!_cameras.value.hasCameras) {
+      return const Left(NoCameraAvailable());
+    }
+
+    // Deal with the disposal of the controller resources everytime the controller changes
+    controller.pairwise().listen(
+          (controllers) => controllers.first.map(
+            (controller) {
+              // Delay the dispose of the controller until the next frame
+              SchedulerBinding.instance
+                  .addPostFrameCallback((_) => controller.dispose);
+            },
+          ),
+        );
+
+    // Set the initial camera
+    return _cameras.value.get(defaultDirection).fold(
+          () => const Left(DefaultCameraNotAvailable()),
+          (camera) => _setCamera(camera),
+        );
   }
 
   /// Takes a picture with the current camera and returns the picture path or an error.
@@ -81,11 +137,8 @@ class MagicEyeBloc {
     // Checks if there is a camera controller or return an error.
     final _controller =
         controller.value.fold<Either<MagicEyeException, CameraController>>(
-      () => Left(
-        MagicEyeException(
-          message: 'Camera controller not found!',
-        ),
-      ),
+      () => Left(null // TODO: Handle error
+          ),
       (controller) => Right(controller),
     );
 
@@ -105,10 +158,7 @@ class MagicEyeBloc {
             await controller.takePicture(path);
           } on CameraException catch (error) {
             return Left(
-              MagicEyeException(
-                message: error.description,
-                source: error,
-              ),
+              InternalException(error),
             );
           }
           return Right(path);
@@ -123,15 +173,13 @@ class MagicEyeBloc {
   /// [Some<UnallowedDirectionError>].
   ///
   /// If the selection succeeds, returns [None].
-  Option<UnallowedCameraError> selectCamera(
-      final DeviceCamera cameraLensDirection) {
-    if (!allowedCameras.contains(cameraLensDirection)) {
-      return Some(UnallowedCameraError(cameraLensDirection));
-    }
-
-    _setCamera(_cameras[cameraLensDirection]);
-    return const None();
-  }
+  Future<Either<MagicEyeException, Unit>> selectCamera(
+    CameraLensDirection cameraLensDirection,
+  ) async =>
+      _cameras.value.get(cameraLensDirection).fold(
+            () => Left(CameraNotAvailable(cameraLensDirection)),
+            (description) => _setCamera(description),
+          );
 
   /// Switches from back camera to front camera, and vice-versa.
   ///
@@ -139,19 +187,29 @@ class MagicEyeBloc {
   /// [Some<UnallowedDirectionError>].
   ///
   /// If the switchs succeeds, returns [None].
-  Option<UnallowedCameraError> switchCamera() => controller.value.fold(
-        () => const None(),
+  Future<Either<MagicEyeException, Unit>> switchCamera() async =>
+      controller.value.fold(
+        () => Left(const CameraUninitialized()),
         (controller) => selectCamera(
             controller.description.lensDirection == CameraLensDirection.back
-                ? DeviceCamera.front
-                : DeviceCamera.back),
+                ? CameraLensDirection.front
+                : CameraLensDirection.back),
       );
 
-  void _setCamera(final CameraDescription camera) {
+  Future<Either<MagicEyeException, Unit>> _setCamera(
+      CameraDescription camera) async {
     // Create new controller for [camera]
     final controller = CameraController(camera, resolutionPreset);
 
-    controller.initialize().then((_) => this.controller.add(Some(controller)));
+    try {
+      await controller.initialize();
+      this.controller.add(Some(controller));
+      return Right(unit);
+    } on CameraException catch (error) {
+      return Left(
+        InternalException(error),
+      );
+    }
   }
 
   /// Releases the resources of the BLoC.
@@ -160,8 +218,9 @@ class MagicEyeBloc {
     controller.close();
   }
 
-  void refreshCamera() => controller.value.fold(
-        () {},
-        (controller) => _setCamera(controller.description),
-      );
+  Future<Either<MagicEyeException, Unit>> refreshCamera() =>
+      controller.value
+          .map((controller) => controller.description)
+          .map(_setCamera) |
+      Future.value(const Right(unit));
 }

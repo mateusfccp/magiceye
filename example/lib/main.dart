@@ -46,9 +46,15 @@ class LoucoButton extends StatelessWidget {
           children: <Widget>[
             RaisedButton(
               child: Text("Take Picture"),
-              onPressed: () => MagicEye().push(context).then(
+              onPressed: () => Navigator.of(context)
+                  .push(
+                    MaterialPageRoute<Either<MagicEyeException, String>>(
+                      builder: (_) => MagicEye(),
+                    ),
+                  )
+                  .then(
                     (path) => path?.fold(
-                      (e) => print("Error :: ${e.message}"),
+                      (e) => print("Error :: ${e}"),
                       (path) => file.add(
                         File(path),
                       ),

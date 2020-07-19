@@ -1,6 +1,6 @@
 name: magiceye
 description: An abstraction on top of flutter camera, that allows you to have a default camera screen or build your own with the layer builders.
-version: 0.1.6+1
+version: 0.2.0-dev.0
 homepage: https://github.com/mateusfccp/magiceye
 repository: https://github.com/mateusfccp/magiceye
 
@@ -13,7 +13,6 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: ^1.6.11
-  native_device_orientation: ^0.3.0
   rxdart: ^0.24.1
 
 dev_dependencies:
