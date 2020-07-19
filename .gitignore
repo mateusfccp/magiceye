@@ -10,3 +10,5 @@ doc/api
 /example/ios/Flutter/Debug.xcconfig
 /example/ios/Podfile
 /example/ios/Flutter/Release.xcconfig
+
+.fvm/flutter_sdk
