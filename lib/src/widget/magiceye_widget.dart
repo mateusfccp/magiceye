@@ -1,10 +1,10 @@
-import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 
-import '../contexts/layer_context.dart';
-import '../exceptions/magiceye_exception.dart';
-import 'magiceye_bloc.dart';
+import '../core/contexts/layer_context.dart';
+import '../core/exceptions/magiceye_exception.dart';
+import '../implementations/magiceye_camera_impl.dart';
+import '../interfaces/magiceye_camera.dart';
 import 'magiceye_controller.dart';
 
 /// A component that provides access to the devices camera and abstracts it's functions.
@@ -74,14 +74,8 @@ class MagicEye extends StatefulWidget {
     LayerContext,
   ) previewLayer;
 
-  /// The resolution that will be used on the camera.
-  final ResolutionPreset resolutionPreset;
-
-  /// The camera direction that will be used when first opened.
-  final CameraLensDirection defaultDirection;
-
   /// The camera logic component.
-  final MagicEyeBloc _bloc;
+  final MagicEyeCamera _camera;
 
   /// The alignment of the preview in the stack.
   final AlignmentDirectional previewAlignment;
@@ -92,20 +86,15 @@ class MagicEye extends StatefulWidget {
   /// Creates a MagicEye component.
   MagicEye({
     Key key,
-    this.loadingWidget = const CircularProgressIndicator(),
+    this.loadingWidget = const Center(
+      child: CircularProgressIndicator(),
+    ),
     this.previewLayer,
     this.controlLayer,
-    this.resolutionPreset = ResolutionPreset.max,
-    this.defaultDirection = CameraLensDirection.back,
     this.previewAlignment = AlignmentDirectional.topCenter,
     this.controller,
-  })  : _bloc = MagicEyeBloc(
-          resolutionPreset: resolutionPreset,
-          defaultDirection: defaultDirection,
-        ),
-        assert(loadingWidget != null),
-        assert(resolutionPreset != null),
-        assert(defaultDirection != null);
+  })  : _camera = MagicEyeCameraImpl(),
+        assert(loadingWidget != null);
 
   // TODO: After push is removed, inject `_MagicEyeState()` directly on `createState()`
   final _state = _MagicEyeState();
@@ -120,6 +109,11 @@ class MagicEye extends StatefulWidget {
   ///
   /// It will return [Either] a [Left<MagicEyeException>], which can be handled or thrown by the client,
   /// or a [Right<String>] containing the path to the screenshot taken.
+  ///
+  /// **Note**:
+  ///
+  /// This method is now deprecated in favor of pushing the [MagicEyeWidget]
+  /// with [Navigator]. This method will be removed in the next version.
   @Deprecated('Use the Navigator to push MagicEye to your context instead.')
   Future<Either<MagicEyeException, String>> push(BuildContext context) =>
       Navigator.of(context).push<Either<MagicEyeException, String>>(
@@ -128,47 +122,49 @@ class MagicEye extends StatefulWidget {
 }
 
 class _MagicEyeState extends State<MagicEye> with WidgetsBindingObserver {
+  OverlayEntry _overlayEntry;
+
   @override
   void initState() {
+    widget._camera.initialize(widget.controller);
     WidgetsBinding.instance.addObserver(this);
+    _overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Positioned.fill(
+        child: widget.controlLayer(context, null),
+      ),
+    );
+    Overlay.of(context).insert(_overlayEntry);
     super.initState();
   }
 
+  //OverlayEntry
+
   @override
-  Widget build(BuildContext context) => StreamBuilder<Option<CameraController>>(
-        stream: widget._bloc.controller,
-        initialData: widget._bloc.controller.value,
-        builder: (context, snapshot) => snapshot.data.fold<Widget>(
-          () => Center(child: widget.loadingWidget),
-          (controller) => Stack(
-            alignment: widget.previewAlignment,
-            children: [
-              AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: Stack(
-                  children: <Widget>[
-                    CameraPreview(controller),
-                    widget.previewLayer(
-                      context,
-                      null, // TODO: LayerContext
-                    ),
-                  ],
-                ),
+  Widget build(BuildContext context) => FutureBuilder<void>(
+        future: widget._camera.initializer,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return AspectRatio(
+              aspectRatio: 16 / 9, // TODO: ratio
+              child: Stack(
+                children: <Widget>[
+                  widget._camera.preview,
+                  widget.previewLayer(
+                    context,
+                    null, // TODO: LayerContext
+                  ),
+                ],
               ),
-              Positioned.fill(
-                child: widget.controlLayer(
-                  context,
-                  null, // TODO: LayerContext
-                ),
-              ),
-            ],
-          ),
-        ),
+            );
+          } else {
+            return widget.loadingWidget;
+          }
+        },
       );
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) widget._bloc.refreshCamera();
+    if (state == AppLifecycleState.resumed) widget._camera.refreshCamera();
     super.didChangeAppLifecycleState(state);
   }
 
@@ -176,7 +172,8 @@ class _MagicEyeState extends State<MagicEye> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-    widget._bloc.dispose();
+    _overlayEntry.remove();
+    widget._camera.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
 }

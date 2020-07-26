@@ -1,6 +1,6 @@
-import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 
+import '../enums/camera.dart';
 import '../exceptions/magiceye_exception.dart';
 
 /// The context provided to MagicEye control layers.
@@ -10,16 +10,13 @@ import '../exceptions/magiceye_exception.dart';
 abstract class LayerContext {
   const LayerContext._();
 
-  /// The cameras this camera is allowed to access.
-  Set<CameraLensDirection> get allowedCameras;
-
-  /// Selects the first camera that matches the given [cameraLensDirection] and optionally returns an error.
+  /// Selects the first camera that matches the given [Camera] and optionally returns an error.
   ///
-  /// If the given [cameraLensDirection] is not allowed by this, returns
+  /// If the given [camera] is not allowed by this, returns
   /// [Some<UnallowedDirectionError>].
   ///
   /// If the selection succeeds, returns [None].
-  Unit Function(CameraLensDirection) get selectCamera;
+  Unit Function(Camera camera) get selectCamera;
 
   /// Switches from back camera to front camera, and vice-versa.
   ///

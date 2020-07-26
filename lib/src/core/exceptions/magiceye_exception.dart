@@ -1,4 +1,4 @@
-import 'package:magiceye/magiceye.dart';
+import '../enums/camera.dart';
 
 /// Exception returned when anything wrong happens with MagicEye.
 abstract class MagicEyeException implements Exception {}
@@ -23,7 +23,7 @@ class DefaultCameraNotAvailable implements MagicEyeException {
 /// Exception returned when trying to switch to a [direction] that is
 /// not available for the device.
 class CameraNotAvailable implements MagicEyeException {
-  final CameraLensDirection direction;
+  final Camera direction;
 
   const CameraNotAvailable(this.direction);
 }
