@@ -14,8 +14,6 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter analyze
-      - name: Tests for DeviceDirection
-        run: flutter pub run test --color ./test/device_direction_test.dart
         
   macos-build:
     name: "Build on macOS"
@@ -29,8 +27,6 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter analyze
-      - name: Tests for DeviceDirection
-        run: flutter pub run test --color ./test/device_direction_test.dart
       
   windows-build:
     name: "Build on Windows"
@@ -44,5 +40,3 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter analyze
-      - name: Tests for DeviceDirection
-        run: flutter pub run test --color ./test/device_direction_test.dart
