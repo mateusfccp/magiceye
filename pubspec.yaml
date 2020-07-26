@@ -12,7 +12,6 @@ dependencies:
   dartz: ^0.9.1
   flutter:
     sdk: flutter
-  path_provider: ^1.6.11
   rxdart: ^0.24.1
 
 dev_dependencies:

@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../core/enums/camera.dart';
