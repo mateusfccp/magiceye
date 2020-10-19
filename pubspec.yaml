@@ -5,11 +5,11 @@ homepage: https://github.com/mateusfccp/magiceye
 repository: https://github.com/mateusfccp/magiceye
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
-  camera: ^0.5.8+2
-  dartz: ^0.9.1
+  camera: ^0.5.8+9
+  dartz: ^0.9.2
   flutter:
     sdk: flutter
   rxdart: ^0.24.1
