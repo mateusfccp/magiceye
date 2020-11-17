@@ -1,3 +1,8 @@
+# 0.1.7+1
+
+* My linter was broken, so I uploaded last version with a lot of errors. :(
+* This version is just those errors fixed
+
 ## 0.1.7
 
 * Correctly export `ResolutionPreset` and `CameraLensDirection` enums
