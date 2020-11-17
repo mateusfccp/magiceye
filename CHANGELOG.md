@@ -1,3 +1,9 @@
+## 0.1.7
+
+* Correctly export `ResolutionPreset` and `CameraLensDirection` enums
+* Updated pubspec.yaml flutter.plugin
+* Defined minimal flutter version to 1.12 on pubspec.yaml
+
 ## 0.1.6+1
 
 * Update pubspec.yaml
