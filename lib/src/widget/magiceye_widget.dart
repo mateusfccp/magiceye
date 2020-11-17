@@ -8,6 +8,7 @@ import '../contexts/control_layer_context.dart';
 import '../contexts/preview_layer_context.dart';
 import '../enums/device_camera.dart';
 import '../enums/device_direction.dart';
+import '../enums/resolution_preset.dart';
 import '../exceptions/magiceye_exception.dart';
 import '../layers/default_camera_control_layer.dart';
 import '../layers/default_camera_preview_layer.dart';
