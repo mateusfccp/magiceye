@@ -2,10 +2,11 @@ import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 
 import '../core/contexts/layer_context.dart';
+import '../core/enums/camera.dart';
+import '../core/enums/resolution.dart';
 import '../core/exceptions/magiceye_exception.dart';
 import '../implementations/magiceye_camera_impl.dart';
 import '../interfaces/magiceye_camera.dart';
-import 'magiceye_controller.dart';
 
 /// A component that provides access to the devices camera and abstracts it's functions.
 ///
@@ -74,14 +75,18 @@ class MagicEye extends StatefulWidget {
     LayerContext,
   ) previewLayer;
 
-  /// The camera logic component.
-  final MagicEyeCamera _camera;
-
   /// The alignment of the preview in the stack.
   final AlignmentDirectional previewAlignment;
 
-  /// The widget's controller.
-  final MagicEyeController controller;
+  /// The initial resolution for the camera.
+  ///
+  /// Defaults to [Resolution.max].
+  final Resolution initialResolution;
+
+  /// The initial camera to be used by the controller.
+  ///
+  /// Defaults to [Camera.backCamera].
+  final Camera initialCamera;
 
   /// Creates a MagicEye component.
   MagicEye({
@@ -91,10 +96,10 @@ class MagicEye extends StatefulWidget {
     ),
     this.previewLayer,
     this.controlLayer,
+    this.initialResolution = Resolution.max,
+    this.initialCamera = Camera.backCamera,
     this.previewAlignment = AlignmentDirectional.topCenter,
-    this.controller,
-  })  : _camera = MagicEyeCameraImpl(),
-        assert(loadingWidget != null);
+  }) : assert(loadingWidget != null);
 
   // TODO: After push is removed, inject `_MagicEyeState()` directly on `createState()`
   final _state = _MagicEyeState();
@@ -124,9 +129,13 @@ class MagicEye extends StatefulWidget {
 class _MagicEyeState extends State<MagicEye> with WidgetsBindingObserver {
   OverlayEntry _overlayEntry;
 
+  /// The camera logic component.
+  MagicEyeCamera camera;
+
   @override
   void initState() {
-    widget._camera.initialize(widget.controller);
+    camera = MagicEyeCameraImpl(widget.initialResolution, widget.initialCamera);
+    camera.initialize();
     WidgetsBinding.instance.addObserver(this);
     _overlayEntry = OverlayEntry(
       builder: (BuildContext context) => Positioned.fill(
@@ -141,14 +150,14 @@ class _MagicEyeState extends State<MagicEye> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) => FutureBuilder<void>(
-        future: widget._camera.initializer,
+        // future: widget.camera.initializer,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return AspectRatio(
               aspectRatio: 16 / 9, // TODO: ratio
               child: Stack(
                 children: <Widget>[
-                  widget._camera.preview,
+                  // widget.camera.preview,
                   widget.previewLayer(
                     context,
                     null, // TODO: LayerContext
@@ -164,16 +173,16 @@ class _MagicEyeState extends State<MagicEye> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) widget._camera.refreshCamera();
+    if (state == AppLifecycleState.resumed) camera.refreshCamera();
     super.didChangeAppLifecycleState(state);
   }
 
   /// Releases the widget's resources.
   @override
-  void dispose() {
+  void dispose() async {
     super.dispose();
     _overlayEntry.remove();
-    widget._camera.dispose();
+    await camera.dispose();
     WidgetsBinding.instance.removeObserver(this);
   }
 }

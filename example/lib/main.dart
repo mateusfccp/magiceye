@@ -45,7 +45,7 @@ class LoucoButton extends StatelessWidget {
         child: Column(
           children: <Widget>[
             RaisedButton(
-              child: Text("Take Picture"),
+              child: Text('Take Picture'),
               onPressed: () => Navigator.of(context)
                   .push(
                     MaterialPageRoute<Either<MagicEyeException, String>>(
@@ -54,7 +54,7 @@ class LoucoButton extends StatelessWidget {
                   )
                   .then(
                     (path) => path?.fold(
-                      (e) => print("Error :: ${e}"),
+                      (e) => print('Error :: ${e}'),
                       (path) => file.add(
                         File(path),
                       ),

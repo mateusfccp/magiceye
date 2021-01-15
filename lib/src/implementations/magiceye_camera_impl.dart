@@ -4,43 +4,50 @@ import 'package:camera/camera.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../core/enums/camera.dart';
 import '../core/enums/resolution.dart';
 import '../core/exceptions/magiceye_exception.dart';
 import '../interfaces/magiceye_camera.dart';
-import '../widget/magiceye_controller.dart';
 
 const Map<Camera, CameraLensDirection> _cameraToCameraLensDirection = {
-  Camera.BackCamera: CameraLensDirection.back,
-  Camera.FrontCamera: CameraLensDirection.front,
-  Camera.ExternalCamera: CameraLensDirection.external,
+  Camera.backCamera: CameraLensDirection.back,
+  Camera.frontCamera: CameraLensDirection.front,
+  Camera.externalCamera: CameraLensDirection.external,
 };
 
 const Map<Resolution, ResolutionPreset> _resolutionToResolutionPreset = {
-  Resolution.Low: ResolutionPreset.low,
-  Resolution.Medium: ResolutionPreset.medium,
-  Resolution.High: ResolutionPreset.high,
-  Resolution.VeryHigh: ResolutionPreset.veryHigh,
-  Resolution.UltraHigh: ResolutionPreset.ultraHigh,
-  Resolution.Max: ResolutionPreset.max,
+  Resolution.low: ResolutionPreset.low,
+  Resolution.medium: ResolutionPreset.medium,
+  Resolution.high: ResolutionPreset.high,
+  Resolution.veryHigh: ResolutionPreset.veryHigh,
+  Resolution.ultraHigh: ResolutionPreset.ultraHigh,
+  Resolution.max: ResolutionPreset.max,
 };
 
 class MagicEyeCameraImpl implements MagicEyeCamera {
-  final _cameraController =
-      BehaviorSubject<Option<CameraController>>.seeded(const None());
+  MagicEyeCameraImpl(
+    this.initialResolution,
+    this.initialCamera,
+  );
 
-  final _cameras = BehaviorSubject.seeded(const _Cameras());
+  @override
+  final Resolution initialResolution;
+
+  @override
+  final Camera initialCamera;
+
+  _State state = _initializing;
+
   final _initializer = Completer<void>();
 
   @override
   Future<void> get initializer => _initializer.future;
 
   @override
-  Widget get preview => _cameraController.value.fold(
-        () => const SizedBox(),
-        (controller) => CameraPreview(controller),
+  Option<Widget> get preview => state.fold(
+        initializing: () => None(),
+        initialized: (state) => Some(CameraPreview(state.controller)),
       );
 
   /// Initializes the MagicEye bloc.
@@ -52,47 +59,36 @@ class MagicEyeCameraImpl implements MagicEyeCamera {
   /// * The default camera is set
   ///
   /// Any of the preceding steps may fail. Thus, a
-  /// [Either<MagicEyeException, Unit>] is returned when the initialization is
+  /// [Option<MagicEyeException>] is returned when the initialization is
   /// finished with the result of the operation.
   @override
-  Future<Either<MagicEyeException, Unit>> initialize(
-    MagicEyeController controller,
-  ) async {
+  Future<Option<MagicEyeException>> initialize() async {
     // Get all cameras from the camera plugin
     final cameras = await availableCameras();
 
     // Map all available cameras to the camera object
-    _cameras.add(
-      cameras.fold<_Cameras>(
-        const _Cameras(),
-        (value, element) => value.update(element),
-      ),
+    final stateCameras = cameras.fold<_Cameras>(
+      const _Cameras(),
+      (value, element) => value.update(element),
     );
 
-    if (!_cameras.value.hasCameras) {
-      return const Left(NoCameraAvailable());
+    if (!stateCameras.hasCamera) {
+      return const Some(NoCameraAvailable());
     }
 
-    // Deal with the disposal of the controller resources everytime the controller changes
-    _cameraController.pairwise().listen(
-          (controllers) => controllers.first.map(
-            (controller) {
-              // Delay the dispose of the controller until the next frame
-              SchedulerBinding.instance
-                  .addPostFrameCallback((_) => controller.dispose);
-            },
-          ),
+    return stateCameras.get(_cameraToCameraLensDirection[initialCamera]).fold(
+      () => const Some(DefaultCameraNotAvailable()),
+      (camera) async {
+        state = _Initialized(
+          cameras: stateCameras,
+          camera: camera,
+          resolution: initialResolution,
         );
 
-    final initialCamera =
-        _cameraToCameraLensDirection[controller.defaultCamera];
+        await (state as _Initialized).controller.initialize();
 
-    // Set the initial camera
-    return _cameras.value.get(initialCamera).fold(
-      () => const Left(DefaultCameraNotAvailable()),
-      (camera) {
         _initializer.complete();
-        return _setCamera(camera);
+        return const None();
       },
     );
   }
@@ -108,25 +104,18 @@ class MagicEyeCameraImpl implements MagicEyeCamera {
   ///
   /// If any error happens in the process, a [Left<MagicEyeException>] is returned instead.
   @override
-  Future<Either<MagicEyeException, String>> takePicture(String path) async {
-    // Checks if there is a camera controller or return an error.
-    final _controller = _cameraController.value
-        .fold<Either<MagicEyeException, CameraController>>(
-      () => const Left(CameraUninitialized()),
-      (controller) => Right(controller),
-    );
+  Future<Option<MagicEyeException>> takePicture(String path) async {
+    await initializer;
 
-    // Takes the picture and saves to the path, or return an error.
-    return _controller.fold(
-      (error) async => Left(error),
-      (controller) async {
+    return state.fold(
+      initializing: () => const Some(CameraUninitialized()),
+      initialized: (state) async {
         try {
-          await controller.takePicture(path);
-          return Right(path);
+          final file = await state.controller.takePicture();
+          file.saveTo(path);
+          return const None();
         } on CameraException catch (error) {
-          return Left(
-            InternalException(error),
-          );
+          return Some(InternalException(error));
         }
       },
     );
@@ -139,14 +128,30 @@ class MagicEyeCameraImpl implements MagicEyeCamera {
   ///
   /// If the selection succeeds, returns [None].
   @override
-  Future<Either<MagicEyeException, Unit>> selectCamera(
+  Future<Option<MagicEyeException>> selectCamera(
     Camera camera,
   ) async {
-    final _camera = _cameraToCameraLensDirection[camera];
-    return _cameras.value.get(_camera).fold(
-          () => Left(CameraNotAvailable(camera)),
-          (description) => _setCamera(description),
+    await initializer;
+
+    return state.fold(
+      initializing: () => const Some(CameraUninitialized()),
+      initialized: (state) async {
+        final _camera = _cameraToCameraLensDirection[camera];
+        return state.cameras.get(_camera).fold(
+          () => Some(CameraNotAvailable(camera)),
+          (description) async {
+            state = state.copyWith(camera: description);
+
+            try {
+              await state.controller.initialize();
+              return const None();
+            } on CameraException catch (error) {
+              return Some(InternalException(error));
+            }
+          },
         );
+      },
+    );
   }
 
   /// Switches from back camera to front camera, and vice-versa.
@@ -156,56 +161,116 @@ class MagicEyeCameraImpl implements MagicEyeCamera {
   ///
   /// If the switchs succeeds, returns [None].
   @override
-  Future<Either<MagicEyeException, Unit>> switchCamera() async =>
-      _cameraController.value.fold(
-        () => Left(const CameraUninitialized()),
-        (controller) {
-          if (controller.description.lensDirection ==
-              CameraLensDirection.external) {
-            return const Right(unit);
-          } else {
-            return selectCamera(
-              controller.description.lensDirection == CameraLensDirection.back
-                  ? Camera.FrontCamera
-                  : Camera.BackCamera,
-            );
-          }
-        },
-      );
+  Future<Option<MagicEyeException>> switchCamera() async {
+    await initializer;
 
-  Future<Either<MagicEyeException, Unit>> _setCamera(
-    CameraDescription camera,
-  ) async {
-    final resolutionPreset =
-        _resolutionToResolutionPreset[null]; // TODO: Resolution problem
-    final controller = CameraController(camera, resolutionPreset);
+    return state.fold(
+      initializing: () => const Some(CameraUninitialized()),
+      initialized: (state) async {
+        final newCamera = state.controller.description.lensDirection ==
+                CameraLensDirection.back
+            ? CameraLensDirection.front
+            : CameraLensDirection.back;
 
-    try {
-      await controller.initialize();
-      _cameraController.add(Some(controller));
-      return Right(unit);
-    } on CameraException catch (error) {
-      return Left(
-        InternalException(error),
-      );
-    }
+        return state.cameras.get(newCamera).fold(
+          () => Some(CameraNotAvailable(null)), // TODO: Fix null
+          (description) {
+            state = state.copyWith(camera: description);
+            return const None();
+          },
+        );
+      },
+    );
   }
 
   /// Releases the resources of the BLoC.
   @override
   Future<Unit> dispose() async {
-    _cameraController.value.forEach((controller) => controller.dispose());
-    await _cameraController.close();
+    await initializer;
+
+    await (state as _Initialized).controller.dispose();
 
     return unit;
   }
 
   @override
-  Future<Either<MagicEyeException, Unit>> refreshCamera() =>
-      _cameraController.value
-          .map((controller) => controller.description)
-          .map(_setCamera) |
-      Future.value(const Right(unit));
+  Future<Option<MagicEyeException>> refreshCamera() async => null; //TODO: Fix?
+  // _cameraController.value
+  //     .map((controller) => controller.description)
+  //     .map(_setCamera) |
+  // Future.value(const Right(unit));
+}
+
+abstract class _State {
+  const _State();
+
+  T fold<T>({
+    @required T Function() initializing,
+    @required T Function(_Initialized state) initialized,
+  }) {
+    assert(initializing != null);
+    assert(initialized != null);
+
+    if (this is _Initializing) {
+      return initializing();
+    } else if (this is _Initialized) {
+      return initialized(this as _Initialized);
+    } else {
+      // TODO: Improve
+      throw Exception();
+    }
+  }
+
+  Either<MagicEyeException, T> orException<T>(
+    T Function(_Initialized state) initialized,
+  ) =>
+      fold(
+        initializing: () => const Left(CameraUninitialized()),
+        initialized: (state) => Right(initialized(state)),
+      );
+}
+
+class _Initializing extends _State {
+  const _Initializing();
+}
+
+const _initializing = _Initializing();
+
+class _Initialized extends _State {
+  final _Cameras cameras;
+  final Resolution resolution;
+  final CameraDescription camera;
+
+  final CameraController _controller;
+
+  CameraController get controller => _controller;
+
+  _Initialized({
+    @required this.cameras,
+    @required this.resolution,
+    @required this.camera,
+  })  : assert(cameras != null),
+        assert(resolution != null),
+        assert(camera != null),
+        _controller = CameraController(
+          camera,
+          _resolutionToResolutionPreset[resolution],
+          enableAudio: false,
+        );
+
+  _Initialized copyWith({
+    _Cameras cameras,
+    Resolution resolution,
+    CameraDescription camera,
+  }) {
+    SchedulerBinding.instance.addPostFrameCallback((_) => _controller.dispose);
+
+    return _Initialized(
+      cameras: cameras ?? this.cameras,
+      resolution: resolution ?? this.resolution,
+      camera: camera ?? this.camera,
+    );
+  }
 }
 
 class _Cameras {
@@ -213,7 +278,7 @@ class _Cameras {
   final Option<CameraDescription> front;
   final Option<CameraDescription> external;
 
-  bool get hasCameras => back.isSome() || front.isSome() || external.isSome();
+  bool get hasCamera => back.isSome() || front.isSome() || external.isSome();
 
   const _Cameras({
     this.back = const None(),

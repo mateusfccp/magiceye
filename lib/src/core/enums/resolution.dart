@@ -3,20 +3,20 @@
 /// If a preset is not available on the camera being used a preset of lower quality will be selected automatically.
 enum Resolution {
   /// 352x288 on iOS, 240p (320x240) on Android
-  Low,
+  low,
 
   /// 480p (640x480 on iOS, 720x480 on Android)
-  Medium,
+  medium,
 
   /// 720p (1280x720)
-  High,
+  high,
 
   /// 1080p (1920x1080)
-  VeryHigh,
+  veryHigh,
 
   /// 2160p (3840x2160)
-  UltraHigh,
+  ultraHigh,
 
   /// The highest resolution available.
-  Max,
+  max,
 }
